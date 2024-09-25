@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c05b2ffbc324454aa0ca9d1b8bd558f, type: 3}
+  m_Name: Enemy_PassiveGoblin
+  m_EditorClassIdentifier: 
+  enemyType: 0
+  enemyName: Passive Goblin
+  maxHP: 10
+  strength: 2
+  allIntents:
+  - intent: 00000000
+    amount: 2
+  - intent: 00000000
+    amount: 5
+  - intent: 03000000
+    amount: 0
+  - intent: 00000000
+    amount: 6
