@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -25,7 +26,8 @@ public class Enemy : MonoBehaviour
     public TMP_Text healthText;
     public TMP_Text enemyName;
 
-    [Header("Enemy Intents Display")] public Image intentImage;
+    [Header("Enemy Intents Display")] 
+    public Image intentImage;
     public TMP_Text intentAmtText;
     public TMP_Text blockedAmtDisplay;
 

@@ -23,5 +23,5 @@ MonoBehaviour:
     amount: 5
   - intent: 03000000
     amount: 0
-  - intent: 00000000
-    amount: 6
+  - intent: 03000000
+    amount: 0

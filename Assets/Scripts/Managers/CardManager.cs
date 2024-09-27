@@ -78,6 +78,7 @@ public class CardManager : MonoBehaviour
         }
 
         UpdateDisplay();
+        EnemyManager.instance.SpawnEnemy();
 
         InitialDrawForTurn();
     }
@@ -103,19 +104,18 @@ public class CardManager : MonoBehaviour
         }
     }
     
-    //first time we drae cards each turn
+    //first time we draw cards each turn
     public void InitialDrawForTurn()
     {
         currentTurn = CurrentTurn.PLAYERTURN;
 
         endTurnButton.interactable = true;
         currentStamina = staminaAtStart;
-        //CombatManager.instance.currentEnemy.OnNewTurn();
+        CombatManager.instance.currentEnemy.OnNewTurn();
         
         //if the starting hand size is larger than the current hand, then draw a card. Otherwise, don't
         if (cardHolderContainer.childCount < startingHandSize)
         {
-            Debug.Log("passou ");
             DrawCard();
         }
         else
@@ -123,7 +123,8 @@ public class CardManager : MonoBehaviour
             isStartingDraw = false;
         }
         
-        //To do: update UI
+        UIManager.instance.UpdateDisplay();
+        UpdateDisplay();
     }
 
     public void DrawCard()
@@ -213,5 +214,20 @@ public class CardManager : MonoBehaviour
 
         isStartingDraw = true;
         InitialDrawForTurn();
+    }
+
+    public void EndTurn()
+    {
+        for (int i = cardHolderContainer.childCount - 1; i >= 0; i--)
+        {
+            DiscardCard(cardHolderContainer.GetChild(i).GetComponent<CardDisplay>());
+        }
+
+        endTurnButton.interactable = false;
+        currentTurn = CurrentTurn.ENEMYTURN;
+        CombatManager.instance.currentEnemy.blockedDemage = 0;
+
+        StartCoroutine(EnemyManager.instance.TakeEnemyTurn(CombatManager.instance.currentEnemy));
+        UpdateDisplay();
     }
 }

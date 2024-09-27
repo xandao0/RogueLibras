@@ -57,6 +57,11 @@ public class CombatManager : MonoBehaviour
     public void Attack(int d, CardDisplay card)
     {
         //current enemy to take damage
+        if (currentEnemy != null)
+        {
+            currentEnemy.TakeDamage(d);
+        }
+        
         if (card != null)
         {
             CardManager.instance.DiscardCard(card);

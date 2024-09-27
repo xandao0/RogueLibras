@@ -25,10 +25,9 @@ public class EnemyManager : MonoBehaviour
          Destroy(this.gameObject);
          return;
       }
-   }
 
-   private void Start()
-   {
+      instance = this;
+      
       for (int i = 0; i < enemyIndexedData.Count; i++)
       {
          enemyIndex.Add(i);
@@ -38,18 +37,20 @@ public class EnemyManager : MonoBehaviour
       {
          enemyDictionary.Add(i, enemyIndexedData[i]);
       }
-
-      int r = Random.Range(0, enemyDictionary.Count);
-
-      SpawnEnemy(enemyDictionary[r]);
    }
 
-   public void SpawnEnemy(EnemyDataSO enemyDataSo)
+   private void Start()
    {
+      
+   }
+
+   public void SpawnEnemy()
+   {
+      int r = Random.Range(0, enemyDictionary.Count);
       GameObject g = Instantiate(enemyPrefab, spawnSpot);
       Enemy e = g.GetComponent<Enemy>();
       
-      e.eData = enemyDataSo;
+      e.eData = enemyDictionary[r];
       CombatManager.instance.currentEnemy = e; 
    }
 
