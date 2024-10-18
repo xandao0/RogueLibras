@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 186a32ee4972cba4bb0bd16230e50228, type: 3}
+  m_Name: Trinket_PantsDown
+  m_EditorClassIdentifier: 
+  trinketName: Pants Down
+  trinketSprite: {fileID: 21300000, guid: e064856f1f7f91d49b7d653287383971, type: 3}
+  trinketDesc: Enemies start combat with 1 <color=#FFFF00>Vulnerable</color>.
+  allTrinketEffects:
+  - effect: 3
+    amount: 1

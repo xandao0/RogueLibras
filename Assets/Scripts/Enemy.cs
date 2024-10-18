@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
@@ -47,8 +48,14 @@ public class Enemy : MonoBehaviour
         set { currentHP = value; HandleHealth();}
     }
 
+    public List<StatusEffects> currentStatusEffects = new List<StatusEffects>();
+    public List<int> currentStatusEffectLengths = new List<int>();
+    public Transform enemyStatusEffectsContainer;
+
     private void Start()
     {
+        EffectsManager.instance.enemyStatusContainer = enemyStatusEffectsContainer;
+        
         CollectInfoFromData();
     }
 
@@ -139,5 +146,62 @@ public class Enemy : MonoBehaviour
         
         //enemymanager chooose next intents
         EnemyManager.instance.ChooseIntentsForNextTurn(this);
+    }
+
+    public void AddEffect(StatusEffects effect, int length)
+    {
+        if (!currentStatusEffects.Contains(effect))
+        {
+            EffectsManager.instance.AddEffect(CurrentTurn.ENEMYTURN, effect);
+            currentStatusEffectLengths.Add(length);
+            EffectsManager.instance.CreateStatus(effect, true);
+        }
+        else
+        {
+            for (int i = 0; i < currentStatusEffects.Count; i++)
+            {
+                if (currentStatusEffects[i] == effect)
+                {
+                    currentStatusEffectLengths[i] += length;
+                }
+            }
+        }
+
+        UpdateUIStatusContainer();
+    }
+
+    public void UpdateUIStatusContainer()
+    {
+        if (currentStatusEffects.Count == 0)
+        {
+            return;
+        }
+
+        for (int i = currentStatusEffects.Count - 1; i >= 0; i--)
+        {
+            EffectsManager.instance.enemyStatusContainer.GetChild(i).GetComponent<Status>().statusText.text =
+                currentStatusEffectLengths[i].ToString();
+        }
+    }
+
+    public void ReduceStatusEffectsOnNewTurn()
+    {
+        for (int i = 0; i < currentStatusEffects.Count; i++)
+        {
+            currentStatusEffectLengths[i]--;
+        }
+
+        for (int i = currentStatusEffectLengths.Count - 1; i >= 0 ; i--)
+        {
+            if (currentStatusEffectLengths[i] <= 0)
+            {
+                EffectsManager.instance.RemoveStatus(EffectsManager.instance.enemyStatusContainer.GetChild(i).gameObject);
+                
+                currentStatusEffectLengths.RemoveAt(i);
+                currentStatusEffects.RemoveAt(i);
+            }
+        }
+        
+        UpdateUIStatusContainer();
     }
 }

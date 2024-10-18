@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25daaef00c0d5e44abe77b2e2391d1ea, type: 3}
   m_Name: Effect_Frail
   m_EditorClassIdentifier: 
-  effectType: 0
-  effectName: 
-  effectStrength: 0
-  effectSprite: {fileID: 0}
-  effectDesc: 
+  effectType: 1
+  effectName: Frail
+  effectStrength: 0.75
+  effectSprite: {fileID: 812284210, guid: 24bf4997669ecfe42b832bd5539a5412, type: 3}
+  effectDesc: Gain 25% Less Block From Cards

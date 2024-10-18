@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyType: 0
   enemyName: Passive Goblin
-  maxHP: 10
+  maxHP: 20
   strength: 2
   allIntents:
   - intent: 00000000

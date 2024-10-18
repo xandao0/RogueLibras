@@ -27,6 +27,9 @@ public class CombatManager : MonoBehaviour
             UpdateHealthDisplay();
         }
     }
+
+    public List<StatusEffects> currentStatusEffects = new List<StatusEffects>();
+    public List<int> currentStatusEffectsLengths = new List<int>();
     
     private void Awake()
     {
@@ -96,5 +99,27 @@ public class CombatManager : MonoBehaviour
     public void Heal(int d)
     {
         CurrentHealth += d;
+    }
+
+    public void AddEffect(StatusEffects effect, int length)
+    {
+        if (!currentStatusEffects.Contains(effect))
+        {
+            EffectsManager.instance.AddEffect(CurrentTurn.PLAYERTURN, effect);
+            currentStatusEffectsLengths.Add(length);
+            EffectsManager.instance.CreateStatus(effect, false);
+        }
+        else
+        {
+            for (int i = 0; i < currentStatusEffects.Count; i++)
+            {
+                if (currentStatusEffects[i] == effect)
+                {
+                    currentStatusEffectsLengths[i] += length;
+                }
+            }
+        }
+        
+        EffectsManager.instance.UpdateUIStatusContainer();
     }
 }
