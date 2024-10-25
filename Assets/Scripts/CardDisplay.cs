@@ -72,7 +72,16 @@ public class CardDisplay : MonoBehaviour
                 {
                     if (temp[i].ToUpper() == "X")
                     {
-                        temp[i] = strength.ToString();
+                        switch (GameManager.instance.currentState)
+                        {
+                            case GameStates.COMBAT:
+                                temp[i] = strength.ToString();
+                                break;
+                            case GameStates.ENDMATCH:
+                                temp[i] = strength.ToString();
+                                break;
+                        }
+                        
                     }
                     
                     newCardDesc += temp[i];
@@ -86,7 +95,16 @@ public class CardDisplay : MonoBehaviour
                 {
                     if (temp[i].ToUpper() == "X")
                     {
-                        temp[i] = defense.ToString();
+                        switch (GameManager.instance.currentState)
+                        {
+                            case GameStates.COMBAT:
+                                temp[i] = defense.ToString();
+                                break;
+                            case GameStates.ENDMATCH:
+                                temp[i] = defense.ToString();
+                                break;
+                        }
+                        
                     }
                     
                     newCardDesc += temp[i];
@@ -132,7 +150,10 @@ public class CardDisplay : MonoBehaviour
         if (GameManager.instance.currentState == GameStates.ENDMATCH)
         {
             //reset combat
+            StartCoroutine(CardManager.instance.ResetCombatWithNewDeck());
             //add new card to deck
+            CardManager.instance.currentAvailableCards.Add(card);
+            return;
         }
         else if (GameManager.instance.currentState == GameStates.COMBAT)
         {

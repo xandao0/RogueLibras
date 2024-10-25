@@ -83,6 +83,7 @@ public class Enemy : MonoBehaviour
         {
             currentHP = 0;
             //show end match screen
+            UIManager.instance.endMatchGO.SetActive(true);
             Destroy(this.gameObject);
         }
 

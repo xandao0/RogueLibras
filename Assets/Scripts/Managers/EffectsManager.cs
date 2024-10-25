@@ -52,16 +52,16 @@ public class EffectsManager : MonoBehaviour
         {
             GameObject g = Instantiate(enemyStatusPrefab, enemyStatusContainer);
             g.GetComponent<Status>().effectData = GetStatusEffect(effect);
-            g.GetComponent<Status>().turnsLeft =
+            /*g.GetComponent<Status>().turnsLeft =
                 CombatManager.instance.currentEnemy.currentStatusEffectLengths
-                [CombatManager.instance.currentEnemy.currentStatusEffectLengths.Count - 1];
+                [CombatManager.instance.currentEnemy.currentStatusEffectLengths.Count - 1];*/
         }
         else
         {
             GameObject g = Instantiate(playerStatusPrefab, playerStatusContainer);
             g.GetComponent<Status>().effectData = GetStatusEffect(effect);
-            g.GetComponent<Status>().turnsLeft = CombatManager.instance.currentStatusEffectsLengths
-                [CombatManager.instance.currentStatusEffectsLengths.Count - 1];
+            /*g.GetComponent<Status>().turnsLeft = CombatManager.instance.currentStatusEffectsLengths
+                [CombatManager.instance.currentStatusEffectsLengths.Count - 1];*/
         }
     }
 

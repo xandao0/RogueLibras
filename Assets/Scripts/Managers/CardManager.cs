@@ -65,6 +65,47 @@ public class CardManager : MonoBehaviour
         LoadDeck();
     }
 
+    public IEnumerator ResetCombatWithNewDeck()
+    {
+        yield return null;
+
+        if (drawContainer.childCount > 0)
+        {
+            for (int i = drawContainer.childCount - 1; i >= 0; i--)
+            {
+                Destroy(drawContainer.GetChild(i).gameObject);
+                yield return null;
+            }
+        }
+        
+        if (discardContainer.childCount > 0)
+        {
+            for (int i = discardContainer.childCount - 1; i >= 0; i--)
+            {
+                Destroy(discardContainer.GetChild(i).gameObject);
+                yield return null;
+            }
+        }
+
+        int r = Random.Range(0, EnemyManager.instance.enemyDictionary.Count);
+
+        if (EffectsManager.instance.playerStatusContainer.childCount > 0)
+        {
+            for (int i = CombatManager.instance.currentStatusEffects.Count - 1; i >= 0; i--)
+            {
+                EffectsManager.instance.RemoveStatus(EffectsManager.instance.playerStatusContainer.GetChild(i).gameObject);
+                CombatManager.instance.currentStatusEffectsLengths.RemoveAt(i);
+                CombatManager.instance.currentStatusEffects.RemoveAt(i);
+            }
+        }
+        
+        
+        UIManager.instance.endMatchGO.SetActive(false);
+
+        isStartingDraw = true;
+        LoadDeck();
+    }
+
     //Happens at the beginning of combat (each enemy)
     public void LoadDeck()
     {
