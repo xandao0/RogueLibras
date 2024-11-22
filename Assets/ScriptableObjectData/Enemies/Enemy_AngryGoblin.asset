@@ -19,7 +19,7 @@ MonoBehaviour:
   allIntents:
   - intent: 00000000
     amount: 10
-  - intent: 0000000003000000
+  - intent: 00000000
     amount: 7
   - intent: 01000000
-    amount: 12
+    amount: 10

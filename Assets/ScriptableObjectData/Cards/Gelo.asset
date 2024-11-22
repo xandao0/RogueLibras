@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5de5fbd96bc0ab44ab26f928373b885d, type: 3}
-  m_Name: Defesa
+  m_Name: Gelo
   m_EditorClassIdentifier: 
-  cardName: Escudo
-  type: 2
+  cardName: Bola de gelo
+  type: 1
   cardStamina: 1
-  cardDescription: 'Defende X '
-  cardVideo: {fileID: 32900000, guid: a70777674217f8c469cbd8f3a2c3c59c, type: 3}
-  strength: 0
-  defense: 5
+  cardDescription: 'Causa X de dano '
+  cardVideo: {fileID: 32900000, guid: 5d5fd05f66d8d3f4289ab62a3fcea3e8, type: 3}
+  strength: 6
+  defense: 0
   cardDrawAmount: 0
   cardEffects: []

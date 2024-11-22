@@ -10,14 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5de5fbd96bc0ab44ab26f928373b885d, type: 3}
-  m_Name: Defesa
+  m_Name: Raio
   m_EditorClassIdentifier: 
-  cardName: Escudo
-  type: 2
-  cardStamina: 1
-  cardDescription: 'Defende X '
-  cardVideo: {fileID: 32900000, guid: a70777674217f8c469cbd8f3a2c3c59c, type: 3}
-  strength: 0
-  defense: 5
+  cardName: Ataque de raio
+  type: 1
+  cardStamina: 2
+  cardDescription: Causa X de dano
+  cardVideo: {fileID: 32900000, guid: 74f876a8e12a75345b32eb8abdece3de, type: 3}
+  strength: 7
+  defense: 0
   cardDrawAmount: 0
+  cure: 0
   cardEffects: []

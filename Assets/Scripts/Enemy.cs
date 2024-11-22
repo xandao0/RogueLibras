@@ -108,6 +108,11 @@ public class Enemy : MonoBehaviour
         int dmg = d;
         
         //status effects
+        if (currentStatusEffects.Contains(StatusEffects.VULNERABLE))
+        {
+            dmg = Mathf.RoundToInt(dmg * EffectsManager.instance.GetStatusEffect(StatusEffects.VULNERABLE)
+                .effectStrength);
+        }
 
         if (blockedDemage >= dmg) //if the enemies block is higher than your damage you are inflicting
             blockedDemage -= dmg;

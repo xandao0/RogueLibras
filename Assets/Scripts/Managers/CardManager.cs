@@ -116,6 +116,7 @@ public class CardManager : MonoBehaviour
             //set the card's name in hierarchy
             g.GetComponent<CardDisplay>().card = currentAvailableCards[i];
             g.name = g.GetComponent<CardDisplay>().card.cardName;
+            
         }
 
         UpdateDisplay();
@@ -123,6 +124,8 @@ public class CardManager : MonoBehaviour
 
         InitialDrawForTurn();
     }
+    
+    
 
     public void UpdateDisplay()
     {
@@ -140,7 +143,7 @@ public class CardManager : MonoBehaviour
             }
             else
             {
-                c.cardStaminaText.color = Color.red;
+                c.cardStaminaText.color = Color.white;
             }
         }
     }
@@ -252,6 +255,7 @@ public class CardManager : MonoBehaviour
     public void StartNewTurn()
     {
         CombatManager.instance.currentBlock = 0;
+        CombatManager.instance.currentEnemy.ReduceStatusEffectsOnNewTurn();
 
         isStartingDraw = true;
         InitialDrawForTurn();

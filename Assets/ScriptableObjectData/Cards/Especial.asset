@@ -16,6 +16,8 @@ MonoBehaviour:
   type: 2
   cardStamina: 1
   cardDescription: Defende X e compra 1 carta
+  cardVideo: {fileID: 32900000, guid: a70777674217f8c469cbd8f3a2c3c59c, type: 3}
   strength: 0
   defense: 2
   cardDrawAmount: 1
+  cardEffects: []

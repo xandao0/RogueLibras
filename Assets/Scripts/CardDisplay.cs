@@ -1,6 +1,10 @@
+using System.Collections;
+using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Video;
 
 public class CardDisplay : MonoBehaviour
 {
@@ -9,7 +13,11 @@ public class CardDisplay : MonoBehaviour
     [Header("Card Info")]
     public TMP_Text cardNameText;
     public TMP_Text cardDescriptionText;
-    //public Image artworkImage;
+    
+    //variables to the video
+    public RawImage videoDisplay;
+    public VideoPlayer videoCard;
+    
     public TMP_Text cardTypeText;
     public TMP_Text cardStaminaText;
 
@@ -22,19 +30,30 @@ public class CardDisplay : MonoBehaviour
     public int strength;
     public int defense;
     public int cardDraw;
+    public int cure;
+    
+    private RenderTexture uniqueRenderTexture;
     
     // Start is called before the first frame update
     private void Start()
     {
         CollectInfoFromCardSo();
+        
     }
 
     private void CollectInfoFromCardSo()
     {
+        
         if (card == null)
         {
-            Destroy(this.gameObject);
+            //Debug.LogError("Card is not assigned!");
+            Destroy(gameObject);
             return;
+        }
+        
+        if (card.cardVideo == null)
+        {
+            Debug.LogWarning("Card video is not assigned!");
         }
 
         cardName = card.cardName;
@@ -44,6 +63,7 @@ public class CardDisplay : MonoBehaviour
         strength = card.strength;
         defense = card.defense;
         cardDraw = card.cardDrawAmount;
+        cure = card.cure;
 
         UpdateDisplay();
     }
@@ -56,6 +76,47 @@ public class CardDisplay : MonoBehaviour
         cardDescriptionText.text = cardDesc;
         cardTypeText.text = cardType.ToString().ToUpper();
         cardStaminaText.text = cardStamina.ToString();
+
+        CardColor();
+        PlayVideo(card.cardVideo);
+    }
+    
+    private void PlayVideo(VideoClip clip)
+    {
+        if (clip == null)
+        {
+            Debug.LogWarning("No video clip assigned to the card.");
+            return;
+        }
+
+        // Create a unique RenderTexture for this card to avoid shared textures
+        uniqueRenderTexture = new RenderTexture(864, 1168, 0);
+        videoDisplay.texture = uniqueRenderTexture;
+        videoCard.targetTexture = uniqueRenderTexture;
+
+        videoCard.clip = clip;
+        videoCard.Prepare();
+
+        StartCoroutine(WaitAndPlay());
+        
+    }
+    
+    private IEnumerator WaitAndPlay()
+    {
+        while (!videoCard.isPrepared)
+        {
+            yield return null; // Wait until the video is ready
+        }
+
+        videoCard.Play();
+    }
+    
+    private void OnDestroy()
+    {
+        if (uniqueRenderTexture != null)
+        {
+            uniqueRenderTexture.Release(); // Release the RenderTexture when the card is destroyed
+        }
     }
 
     private string ProcessDescription()
@@ -66,7 +127,7 @@ public class CardDisplay : MonoBehaviour
         
         switch (card.type)
         {
-            case CardTypes.ATTACK:
+            case CardTypes.ATAQUE:
                 
                 for (int i = 0; i < temp.Length; i++)
                 {
@@ -75,6 +136,26 @@ public class CardDisplay : MonoBehaviour
                         switch (GameManager.instance.currentState)
                         {
                             case GameStates.COMBAT:
+                                if (CombatManager.instance.currentEnemy.currentStatusEffects.Contains(StatusEffects
+                                        .VULNERABLE))
+                                {
+                                    temp[i] = string.Format("<color=#00FF00>{0}</color>",
+                                        Mathf.RoundToInt((strength + CombatManager.instance.currentMight) *
+                                                         EffectsManager.instance
+                                                             .GetStatusEffect(StatusEffects.VULNERABLE)
+                                                             .effectStrength));
+                                }
+                                
+                                else if (CombatManager.instance.currentEnemy.currentStatusEffects.Contains(StatusEffects
+                                             .WEAK))
+                                {
+                                    temp[i] = string.Format("<color=#00FF00>{0}</color>",
+                                        Mathf.RoundToInt((strength + CombatManager.instance.currentMight) *
+                                                         EffectsManager.instance
+                                                             .GetStatusEffect(StatusEffects.WEAK)
+                                                             .effectStrength));
+                                }
+                                else temp[i] = strength.ToString();
                                 temp[i] = strength.ToString();
                                 break;
                             case GameStates.ENDMATCH:
@@ -90,7 +171,7 @@ public class CardDisplay : MonoBehaviour
                 }
 
                 break;            
-            case CardTypes.DEFENSE:
+            case CardTypes.DEFESA:
                 for (int i = 0; i < temp.Length; i++)
                 {
                     if (temp[i].ToUpper() == "X")
@@ -98,6 +179,13 @@ public class CardDisplay : MonoBehaviour
                         switch (GameManager.instance.currentState)
                         {
                             case GameStates.COMBAT:
+                                if (CombatManager.instance.currentStatusEffects.Contains(StatusEffects.FRAIL))
+                                {
+                                    temp[i] = string.Format("<color=#FF0000>{0}</color>",
+                                        Mathf.RoundToInt((defense * EffectsManager.instance
+                                            .GetStatusEffect(StatusEffects.FRAIL).effectStrength)));
+                                }
+                                
                                 temp[i] = defense.ToString();
                                 break;
                             case GameStates.ENDMATCH:
@@ -118,7 +206,7 @@ public class CardDisplay : MonoBehaviour
                 {
                     if (temp[i].ToUpper() == "X")
                     {
-                        temp[i] = cardDraw.ToString();
+                        temp[i] = cure.ToString();
                     }
                     
                     newCardDesc += temp[i];
@@ -145,6 +233,22 @@ public class CardDisplay : MonoBehaviour
         return newCardDesc;
     }
 
+    private void CardColor()
+    {
+        switch (card.type)
+        {
+            case CardTypes.ATAQUE:
+                GetComponent<Image>().color = Color.red;
+                break;
+            case CardTypes.DEFESA:
+                GetComponent<Image>().color = Color.green;
+                break;
+            case CardTypes.ITEM:
+                GetComponent<Image>().color = Color.yellow;
+                break;
+        }
+    }
+
     public void UseCard()
     {
         if (GameManager.instance.currentState == GameStates.ENDMATCH)
@@ -164,10 +268,10 @@ public class CardDisplay : MonoBehaviour
                 //after the stamina has been removed, do cool card stuff
                 switch (cardType)
                 {
-                    case CardTypes.ATTACK:
+                    case CardTypes.ATAQUE:
                         CombatManager.instance.Attack(strength, this);
                         break;
-                    case CardTypes.DEFENSE:
+                    case CardTypes.DEFESA:
                         CombatManager.instance.AddDefense(defense, this);
 
                         if (cardDraw > 0)
@@ -176,9 +280,9 @@ public class CardDisplay : MonoBehaviour
                         }
                         break;
                     case CardTypes.ITEM:
-                        if (cardDraw > 0)
+                        if (cure > 0)
                         {
-                            StartCoroutine(CardManager.instance.DrawCards(this));
+                            CombatManager.instance.Heal(cure, this);
                         }
                         break;
                     case CardTypes.BOOST:

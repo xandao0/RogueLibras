@@ -74,6 +74,18 @@ public class EnemyManager : MonoBehaviour
          case EnemyIntentsType.ATTACK:
             int dmg = e.thisTurnIntentStrength;
 
+            if (CombatManager.instance.currentStatusEffects.Contains(StatusEffects.VULNERABLE))
+            {
+               dmg = Mathf.RoundToInt(dmg * EffectsManager.instance.GetStatusEffect(StatusEffects.VULNERABLE)
+                  .effectStrength);
+            }
+
+            if (CombatManager.instance.currentStatusEffects.Contains(StatusEffects.WEAK))
+            {
+               dmg = Mathf.RoundToInt(dmg * EffectsManager.instance.GetStatusEffect(StatusEffects.WEAK)
+                  .effectStrength);
+            }
+
             e.intentImage.sprite = e.sprite_IntentAttack;
             e.intentAmtText.text = dmg.ToString();
             break;
@@ -111,6 +123,10 @@ public class EnemyManager : MonoBehaviour
                break;
             case EnemyIntentsType.DISABLE:
                //To do: add status effect to player
+               for (int j = 0; j < e.thisTurnIntent[i].intentEffects.Length; j++)
+               {
+                  CombatManager.instance.AddEffect(e.thisTurnIntent[i].intentEffects[j].effect, e.thisTurnIntent[i].intentEffects[j].effectTurns+1);
+               }
                break;
          }
       }
@@ -122,6 +138,7 @@ public class EnemyManager : MonoBehaviour
    public void EndEnemyTurn()
    {
       //To do: reduce player status effects at end of turn
+      CombatManager.instance.ReduceAllEffectsOnPlayer();
 
       CardManager.instance.StartNewTurn();
    }

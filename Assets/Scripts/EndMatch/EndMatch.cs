@@ -9,12 +9,7 @@ public class EndMatch : MonoBehaviour
     private void OnEnable()
     {
         GameManager.ChangeState(GameStates.ENDMATCH);
-
-        for (int i = CardManager.instance.cardHolderContainer.childCount - 1; i >= 0; i--)
-        {
-            CardManager.instance.DiscardCard(CardManager.instance.cardHolderContainer.GetChild(i).GetComponent<CardDisplay>());
-        }
-
+        
         List<CardDataSo> allCards = new List<CardDataSo>();
         allCards.AddRange(CardManager.instance.allCardsThatExist);
 
@@ -24,6 +19,13 @@ public class EndMatch : MonoBehaviour
             int r = Random.Range(0, allCards.Count);
             g.GetComponent<CardDisplay>().card = allCards[r];
             allCards.RemoveAt(r);
+        }
+        
+        for (int i = CardManager.instance.cardHolderContainer.childCount - 1; i >= 0; i--)
+        {
+                 
+            CardManager.instance.DiscardCard(CardManager.instance.cardHolderContainer.GetChild(i).GetComponent<CardDisplay>());
+                     
         }
     }
 

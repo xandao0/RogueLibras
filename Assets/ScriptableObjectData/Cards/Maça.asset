@@ -10,14 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5de5fbd96bc0ab44ab26f928373b885d, type: 3}
-  m_Name: Defesa
+  m_Name: "Ma\xE7a"
   m_EditorClassIdentifier: 
-  cardName: Escudo
-  type: 2
+  cardName: 
+  type: 3
   cardStamina: 1
-  cardDescription: 'Defende X '
+  cardDescription: Cura X de vida
   cardVideo: {fileID: 32900000, guid: a70777674217f8c469cbd8f3a2c3c59c, type: 3}
   strength: 0
-  defense: 5
+  defense: 0
   cardDrawAmount: 0
+  cure: 10
   cardEffects: []

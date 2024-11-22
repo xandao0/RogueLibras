@@ -16,5 +16,13 @@ public class EnemyDataSO : ScriptableObject
     {
         public EnemyIntentsType[] intent;
         public int amount;
+        public EnemyIntentEffects[] intentEffects;
+    }
+    
+    [System.Serializable]
+    public struct EnemyIntentEffects
+    {
+        public StatusEffects effect;
+        public int effectTurns;
     }
 }

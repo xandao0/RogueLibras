@@ -19,9 +19,13 @@ MonoBehaviour:
   allIntents:
   - intent: 00000000
     amount: 2
-  - intent: 00000000
+    intentEffects: []
+  - intent: 01000000
     amount: 5
-  - intent: 03000000
-    amount: 0
-  - intent: 03000000
-    amount: 0
+    intentEffects: []
+  - intent: 01000000
+    amount: 5
+    intentEffects: []
+  - intent: 01000000
+    amount: 3
+    intentEffects: []
