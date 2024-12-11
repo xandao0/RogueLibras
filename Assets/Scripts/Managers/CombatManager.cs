@@ -27,6 +27,9 @@ public class CombatManager : MonoBehaviour
             UpdateHealthDisplay();
         }
     }
+
+    //public List<StatusEffects> currentStatusEffects = new List<StatusEffects>();
+    //public List<int> currentStatusEffectsLengths = new List<int>();
     
     private void Awake()
     {
@@ -82,6 +85,14 @@ public class CombatManager : MonoBehaviour
     public void TakeDamage(int d)
     {
         int dmg = d;
+        
+        /*
+        if (currentStatusEffects.Contains(StatusEffects.VULNERABLE))
+        {
+            dmg = Mathf.RoundToInt(dmg * EffectsManager.instance.GetStatusEffect(StatusEffects.VULNERABLE)
+                .effectStrength);
+        }
+        */
 
         if (currentBlock >= dmg)
             currentBlock -= dmg;
@@ -93,8 +104,56 @@ public class CombatManager : MonoBehaviour
         }
     }
 
-    public void Heal(int d)
+    public void Heal(int d, CardDisplay card)
     {
         CurrentHealth += d;
+        if (card != null)
+        {
+            CardManager.instance.DiscardCard(card);
+        }
+
+        CardManager.instance.UpdateDisplay();
     }
+
+    /*public void AddEffect(StatusEffects effect, int length)
+    {
+        if (!currentStatusEffects.Contains(effect))
+        {
+            EffectsManager.instance.AddEffect(CurrentTurn.PLAYERTURN, effect);
+            currentStatusEffectsLengths.Add(length);
+            EffectsManager.instance.CreateStatus(effect, false);
+        }
+        else
+        {
+            for (int i = 0; i < currentStatusEffects.Count; i++)
+            {
+                if (currentStatusEffects[i] == effect)
+                {
+                    currentStatusEffectsLengths[i] += length;
+                }
+            }
+        }
+        
+        EffectsManager.instance.UpdateUIStatusContainer();
+    }
+
+    public void ReduceAllEffectsOnPlayer()
+    {
+        for (int i = 0; i < currentStatusEffects.Count; i++)
+        {
+            currentStatusEffectsLengths[i]--;
+        }
+
+        for (int i = currentStatusEffectsLengths.Count - 1; i >= 0; i--)
+        {
+            if (currentStatusEffectsLengths[i] <= 0)
+            {
+                EffectsManager.instance.RemoveStatus(EffectsManager.instance.playerStatusContainer.GetChild(i).gameObject);
+                currentStatusEffectsLengths.RemoveAt(i);
+                currentStatusEffects.RemoveAt(i);
+            }
+        }
+        
+        EffectsManager.instance.UpdateUIStatusContainer();
+    }*/
 }

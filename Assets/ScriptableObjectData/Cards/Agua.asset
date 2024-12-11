@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5de5fbd96bc0ab44ab26f928373b885d, type: 3}
+  m_Name: Agua
+  m_EditorClassIdentifier: 
+  cardName: Agua
+  type: 2
+  cardStamina: 1
+  cardDescription: Defende D e cura C
+  cardVideo: {fileID: 32900000, guid: fd8ded07715ccb34a95e0ef6b410b947, type: 3}
+  strength: 0
+  defense: 3
+  cardDrawAmount: 0
+  cure: 5
+  cardEffects: []

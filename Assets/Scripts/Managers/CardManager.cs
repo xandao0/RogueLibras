@@ -65,8 +65,50 @@ public class CardManager : MonoBehaviour
         LoadDeck();
     }
 
+    public IEnumerator ResetCombatWithNewDeck()
+    {
+        yield return null;
+
+        if (drawContainer.childCount > 0)
+        {
+            for (int i = drawContainer.childCount - 1; i >= 0; i--)
+            {
+                Destroy(drawContainer.GetChild(i).gameObject);
+                yield return null;
+            }
+        }
+        
+        if (discardContainer.childCount > 0)
+        {
+            for (int i = discardContainer.childCount - 1; i >= 0; i--)
+            {
+                Destroy(discardContainer.GetChild(i).gameObject);
+                yield return null;
+            }
+        }
+
+        int r = Random.Range(0, EnemyManager.instance.enemyDictionary.Count);
+       
+        /*
+        if (EffectsManager.instance.playerStatusContainer.childCount > 0)
+        {
+            for (int i = CombatManager.instance.currentStatusEffects.Count - 1; i >= 0; i--)
+            {
+                EffectsManager.instance.RemoveStatus(EffectsManager.instance.playerStatusContainer.GetChild(i).gameObject);
+                CombatManager.instance.currentStatusEffectsLengths.RemoveAt(i);
+                CombatManager.instance.currentStatusEffects.RemoveAt(i);
+            }
+        }
+        */
+        
+        UIManager.instance.endMatchGO.SetActive(false);
+
+        isStartingDraw = true;
+        LoadDeck();
+    }
+
     //Happens at the beginning of combat (each enemy)
-    public void LoadDeck()
+    private void LoadDeck()
     {
         for (int i = 0; i < currentAvailableCards.Count; i++)
         {
@@ -75,6 +117,7 @@ public class CardManager : MonoBehaviour
             //set the card's name in hierarchy
             g.GetComponent<CardDisplay>().card = currentAvailableCards[i];
             g.name = g.GetComponent<CardDisplay>().card.cardName;
+            
         }
 
         UpdateDisplay();
@@ -82,6 +125,8 @@ public class CardManager : MonoBehaviour
 
         InitialDrawForTurn();
     }
+    
+    
 
     public void UpdateDisplay()
     {
@@ -99,13 +144,13 @@ public class CardManager : MonoBehaviour
             }
             else
             {
-                c.cardStaminaText.color = Color.red;
+                c.cardStaminaText.color = Color.white;
             }
         }
     }
     
     //first time we draw cards each turn
-    public void InitialDrawForTurn()
+    private void InitialDrawForTurn()
     {
         currentTurn = CurrentTurn.PLAYERTURN;
 
@@ -127,7 +172,7 @@ public class CardManager : MonoBehaviour
         UpdateDisplay();
     }
 
-    public void DrawCard()
+    private void DrawCard()
     {
         //amount of cards in draw pile
         if (drawContainer.childCount > 0)
@@ -167,7 +212,7 @@ public class CardManager : MonoBehaviour
         UpdateDisplay();
     }
 
-    public void ReshuffleDeck()
+    private void ReshuffleDeck()
     {
         for (int i = discardContainer.childCount - 1; i >= 0; i--)
         {
@@ -198,7 +243,7 @@ public class CardManager : MonoBehaviour
         }
     }
 
-    public void ResetCardTransform(Transform card)
+    private void ResetCardTransform(Transform card)
     {
         card.localPosition = Vector2.zero;
     }
@@ -211,6 +256,7 @@ public class CardManager : MonoBehaviour
     public void StartNewTurn()
     {
         CombatManager.instance.currentBlock = 0;
+        //CombatManager.instance.currentEnemy.ReduceStatusEffectsOnNewTurn();
 
         isStartingDraw = true;
         InitialDrawForTurn();

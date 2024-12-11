@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5de5fbd96bc0ab44ab26f928373b885d, type: 3}
+  m_Name: Pao
+  m_EditorClassIdentifier: 
+  cardName: "P\xE3o"
+  type: 3
+  cardStamina: 1
+  cardDescription: Cura C de vida
+  cardVideo: {fileID: 32900000, guid: 474305b5ca44bc142a4f30863e9bf6fc, type: 3}
+  strength: 0
+  defense: 0
+  cardDrawAmount: 0
+  cure: 10
+  cardEffects: []
