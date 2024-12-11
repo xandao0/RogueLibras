@@ -12,12 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5de5fbd96bc0ab44ab26f928373b885d, type: 3}
   m_Name: Fogo
   m_EditorClassIdentifier: 
-  cardName: Bola de fogo
+  cardName: Fogo
   type: 1
   cardStamina: 1
-  cardDescription: 'Causa X de dano '
-  cardVideo: {fileID: 32900000, guid: b097cf52f6a9fca46b35379675466b3a, type: 3}
+  cardDescription: 'Causa S de dano '
+  cardVideo: {fileID: 32900000, guid: 7007925fa4cfd3a46b9477423fd51bad, type: 3}
   strength: 5
   defense: 0
   cardDrawAmount: 0
+  cure: 0
   cardEffects: []

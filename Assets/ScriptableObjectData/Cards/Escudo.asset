@@ -10,14 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5de5fbd96bc0ab44ab26f928373b885d, type: 3}
-  m_Name: Especial
+  m_Name: Escudo
   m_EditorClassIdentifier: 
-  cardName: Defesa especial
+  cardName: Escudo
   type: 2
   cardStamina: 1
-  cardDescription: Defende X e compra 1 carta
-  cardVideo: {fileID: 32900000, guid: a70777674217f8c469cbd8f3a2c3c59c, type: 3}
+  cardDescription: Defende D
+  cardVideo: {fileID: 32900000, guid: 90f54a7bba4002d40bfb4f6472c70f95, type: 3}
   strength: 0
-  defense: 2
-  cardDrawAmount: 1
+  defense: 5
+  cardDrawAmount: 0
+  cure: 0
   cardEffects: []

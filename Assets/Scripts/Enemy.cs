@@ -27,6 +27,8 @@ public class Enemy : MonoBehaviour
     public TMP_Text healthText;
     public TMP_Text enemyName;
 
+    public SpriteRenderer enemyArt;
+
     [Header("Enemy Intents Display")] 
     public Image intentImage;
     public TMP_Text intentAmtText;
@@ -54,7 +56,7 @@ public class Enemy : MonoBehaviour
 
     private void Start()
     {
-        EffectsManager.instance.enemyStatusContainer = enemyStatusEffectsContainer;
+        //EffectsManager.instance.enemyStatusContainer = enemyStatusEffectsContainer;
         
         CollectInfoFromData();
     }
@@ -63,7 +65,7 @@ public class Enemy : MonoBehaviour
     {
         if (eData == null)
         {
-            Destroy(this.gameObject);
+            Destroy(gameObject);
             return;
         }
 
@@ -75,6 +77,9 @@ public class Enemy : MonoBehaviour
         healthSlider.maxValue = maxHP;
         enemyName.text = eName.ToUpper();
         CurrentHP = maxHP;
+
+        //arte do inimigo
+        enemyArt.sprite = eData.artwork;
     }
 
     private void HandleHealth()
@@ -84,7 +89,7 @@ public class Enemy : MonoBehaviour
             currentHP = 0;
             //show end match screen
             UIManager.instance.endMatchGO.SetActive(true);
-            Destroy(this.gameObject);
+            Destroy(gameObject);
         }
 
         if (currentHP > maxHP)
@@ -108,11 +113,11 @@ public class Enemy : MonoBehaviour
         int dmg = d;
         
         //status effects
-        if (currentStatusEffects.Contains(StatusEffects.VULNERABLE))
+        /*if (currentStatusEffects.Contains(StatusEffects.VULNERABLE))
         {
             dmg = Mathf.RoundToInt(dmg * EffectsManager.instance.GetStatusEffect(StatusEffects.VULNERABLE)
                 .effectStrength);
-        }
+        }*/
 
         if (blockedDemage >= dmg) //if the enemies block is higher than your damage you are inflicting
             blockedDemage -= dmg;
@@ -154,7 +159,7 @@ public class Enemy : MonoBehaviour
         EnemyManager.instance.ChooseIntentsForNextTurn(this);
     }
 
-    public void AddEffect(StatusEffects effect, int length)
+    /*public void AddEffect(StatusEffects effect, int length)
     {
         if (!currentStatusEffects.Contains(effect))
         {
@@ -209,5 +214,5 @@ public class Enemy : MonoBehaviour
         }
         
         UpdateUIStatusContainer();
-    }
+    }*/
 }

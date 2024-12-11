@@ -10,19 +10,21 @@ public class EnemyDataSO : ScriptableObject
     public int maxHP;
     public int strength;
     public EnemyIntents[] allIntents;
+
+    public Sprite artwork;
     
     [System.Serializable]
     public struct EnemyIntents
     {
         public EnemyIntentsType[] intent;
         public int amount;
-        public EnemyIntentEffects[] intentEffects;
+        //public EnemyIntentEffects[] intentEffects;
     }
-    
+    /*
     [System.Serializable]
     public struct EnemyIntentEffects
     {
         public StatusEffects effect;
         public int effectTurns;
-    }
+    }*/
 }

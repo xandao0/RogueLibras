@@ -9,6 +9,7 @@ public class EndMatch : MonoBehaviour
     private void OnEnable()
     {
         GameManager.ChangeState(GameStates.ENDMATCH);
+        CardManager.instance.endTurnButton.interactable = false;
         
         List<CardDataSo> allCards = new List<CardDataSo>();
         allCards.AddRange(CardManager.instance.allCardsThatExist);
@@ -16,7 +17,7 @@ public class EndMatch : MonoBehaviour
         for (int i = 0; i < 3; i++)
         {
             GameObject g = Instantiate(CardManager.instance.newCardPrefab, cardContainer);
-            int r = Random.Range(0, allCards.Count);
+            int r = Random.Range(7, allCards.Count);
             g.GetComponent<CardDisplay>().card = allCards[r];
             allCards.RemoveAt(r);
         }

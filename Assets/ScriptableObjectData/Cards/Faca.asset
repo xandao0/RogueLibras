@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5de5fbd96bc0ab44ab26f928373b885d, type: 3}
-  m_Name: Raio
+  m_Name: Faca
   m_EditorClassIdentifier: 
-  cardName: Raio
+  cardName: Faca
   type: 1
   cardStamina: 1
   cardDescription: Causa S de dano
-  cardVideo: {fileID: 32900000, guid: 13eb585afeaae964f84cdd180c900173, type: 3}
-  strength: 7
+  cardVideo: {fileID: 32900000, guid: 79a808473613d6c4b889c6a3edfdcba6, type: 3}
+  strength: 10
   defense: 0
   cardDrawAmount: 0
   cure: 0

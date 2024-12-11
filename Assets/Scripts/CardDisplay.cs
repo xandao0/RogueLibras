@@ -118,6 +118,8 @@ public class CardDisplay : MonoBehaviour
             uniqueRenderTexture.Release(); // Release the RenderTexture when the card is destroyed
         }
     }
+    
+    
 
     private string ProcessDescription()
     {
@@ -131,11 +133,12 @@ public class CardDisplay : MonoBehaviour
                 
                 for (int i = 0; i < temp.Length; i++)
                 {
-                    if (temp[i].ToUpper() == "X")
+                    if (temp[i].ToUpper() == "S")
                     {
                         switch (GameManager.instance.currentState)
                         {
                             case GameStates.COMBAT:
+                                /*
                                 if (CombatManager.instance.currentEnemy.currentStatusEffects.Contains(StatusEffects
                                         .VULNERABLE))
                                 {
@@ -156,6 +159,7 @@ public class CardDisplay : MonoBehaviour
                                                              .effectStrength));
                                 }
                                 else temp[i] = strength.ToString();
+                                */
                                 temp[i] = strength.ToString();
                                 break;
                             case GameStates.ENDMATCH:
@@ -174,25 +178,29 @@ public class CardDisplay : MonoBehaviour
             case CardTypes.DEFESA:
                 for (int i = 0; i < temp.Length; i++)
                 {
-                    if (temp[i].ToUpper() == "X")
+                    if (temp[i].ToUpper() == "D")
                     {
                         switch (GameManager.instance.currentState)
                         {
                             case GameStates.COMBAT:
+                                /*
                                 if (CombatManager.instance.currentStatusEffects.Contains(StatusEffects.FRAIL))
                                 {
                                     temp[i] = string.Format("<color=#FF0000>{0}</color>",
                                         Mathf.RoundToInt((defense * EffectsManager.instance
                                             .GetStatusEffect(StatusEffects.FRAIL).effectStrength)));
                                 }
-                                
+                                */
                                 temp[i] = defense.ToString();
                                 break;
                             case GameStates.ENDMATCH:
                                 temp[i] = defense.ToString();
                                 break;
                         }
-                        
+                    }
+                    if (temp[i].ToUpper() == "C")
+                    {
+                        temp[i] = cure.ToString();
                     }
                     
                     newCardDesc += temp[i];
@@ -204,9 +212,21 @@ public class CardDisplay : MonoBehaviour
             case CardTypes.ITEM:
                 for (int i = 0; i < temp.Length; i++)
                 {
-                    if (temp[i].ToUpper() == "X")
+                    if (temp[i].ToUpper() == "C")
                     {
                         temp[i] = cure.ToString();
+                    }
+                    if (temp[i].ToUpper() == "D")
+                    {
+                        switch (GameManager.instance.currentState)
+                        {
+                            case GameStates.COMBAT:
+                                temp[i] = defense.ToString();
+                                break;
+                            case GameStates.ENDMATCH:
+                                temp[i] = defense.ToString();
+                                break;
+                        }
                     }
                     
                     newCardDesc += temp[i];
@@ -257,9 +277,8 @@ public class CardDisplay : MonoBehaviour
             StartCoroutine(CardManager.instance.ResetCombatWithNewDeck());
             //add new card to deck
             CardManager.instance.currentAvailableCards.Add(card);
-            return;
         }
-        else if (GameManager.instance.currentState == GameStates.COMBAT)
+        if (GameManager.instance.currentState == GameStates.COMBAT)
         {
             if (CardManager.instance.CanUseCard((this)))
             {
@@ -277,6 +296,10 @@ public class CardDisplay : MonoBehaviour
                         if (cardDraw > 0)
                         {
                             StartCoroutine(CardManager.instance.DrawCards(this));
+                        }
+                        if (cure > 0)
+                        {
+                            CombatManager.instance.Heal(cure, this);
                         }
                         break;
                     case CardTypes.ITEM:

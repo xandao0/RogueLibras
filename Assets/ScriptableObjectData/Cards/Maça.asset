@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5de5fbd96bc0ab44ab26f928373b885d, type: 3}
   m_Name: "Ma\xE7a"
   m_EditorClassIdentifier: 
-  cardName: 
+  cardName: "Ma\xE7\xE3"
   type: 3
   cardStamina: 1
-  cardDescription: Cura X de vida
-  cardVideo: {fileID: 32900000, guid: a70777674217f8c469cbd8f3a2c3c59c, type: 3}
+  cardDescription: Cura C de vida
+  cardVideo: {fileID: 32900000, guid: 4690b3b27a4e29f49977ac3bd0acdca3, type: 3}
   strength: 0
   defense: 0
   cardDrawAmount: 0
-  cure: 10
+  cure: 5
   cardEffects: []

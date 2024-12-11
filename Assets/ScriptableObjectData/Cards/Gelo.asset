@@ -12,12 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5de5fbd96bc0ab44ab26f928373b885d, type: 3}
   m_Name: Gelo
   m_EditorClassIdentifier: 
-  cardName: Bola de gelo
+  cardName: Gelo
   type: 1
   cardStamina: 1
-  cardDescription: 'Causa X de dano '
-  cardVideo: {fileID: 32900000, guid: 5d5fd05f66d8d3f4289ab62a3fcea3e8, type: 3}
+  cardDescription: 'Causa S de dano '
+  cardVideo: {fileID: 32900000, guid: c88da745f180aa048b64d9910ced1771, type: 3}
   strength: 6
   defense: 0
   cardDrawAmount: 0
+  cure: 0
   cardEffects: []

@@ -496,6 +496,7 @@ MonoBehaviour:
   currentBlockedDisplay: {fileID: 7911106617995918588}
   healthText: {fileID: 7314749850478997940}
   enemyName: {fileID: 4750072085465930097}
+  enemyArt: {fileID: 3583093753762253832}
   intentImage: {fileID: 841554259637632395}
   intentAmtText: {fileID: 4366646855668458234}
   blockedAmtDisplay: {fileID: 352085657682092482}
@@ -836,7 +837,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.3, y: 1, z: 0}
-  m_LocalScale: {x: 1.51, y: 2.14313, z: 0.1530807}
+  m_LocalScale: {x: 5.66, y: 8.033189, z: 0.5737992}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 6570054079587258961}
@@ -882,15 +883,15 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: f3e02d9c6fd470f4e805afabb723ffb3, type: 3}
+  m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.39, y: 0.37}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &5781924682939464880
@@ -1508,7 +1509,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8284891646850874705, guid: 59aa143b9c454e346ab5f641d8c4c0d1, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8284891646850874705, guid: 59aa143b9c454e346ab5f641d8c4c0d1, type: 3}
       propertyPath: m_AnchorMin.x
@@ -1516,7 +1517,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8284891646850874705, guid: 59aa143b9c454e346ab5f641d8c4c0d1, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8284891646850874705, guid: 59aa143b9c454e346ab5f641d8c4c0d1, type: 3}
       propertyPath: m_SizeDelta.x
@@ -1556,11 +1557,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8284891646850874705, guid: 59aa143b9c454e346ab5f641d8c4c0d1, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 195.85
       objectReference: {fileID: 0}
     - target: {fileID: 8284891646850874705, guid: 59aa143b9c454e346ab5f641d8c4c0d1, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -16
       objectReference: {fileID: 0}
     - target: {fileID: 8284891646850874705, guid: 59aa143b9c454e346ab5f641d8c4c0d1, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

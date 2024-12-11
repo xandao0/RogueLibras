@@ -39,11 +39,6 @@ public class EnemyManager : MonoBehaviour
       }
    }
 
-   private void Start()
-   {
-      
-   }
-
    public void SpawnEnemy()
    {
       int r = Random.Range(0, enemyDictionary.Count);
@@ -73,7 +68,8 @@ public class EnemyManager : MonoBehaviour
       {
          case EnemyIntentsType.ATTACK:
             int dmg = e.thisTurnIntentStrength;
-
+            
+            /*
             if (CombatManager.instance.currentStatusEffects.Contains(StatusEffects.VULNERABLE))
             {
                dmg = Mathf.RoundToInt(dmg * EffectsManager.instance.GetStatusEffect(StatusEffects.VULNERABLE)
@@ -85,6 +81,7 @@ public class EnemyManager : MonoBehaviour
                dmg = Mathf.RoundToInt(dmg * EffectsManager.instance.GetStatusEffect(StatusEffects.WEAK)
                   .effectStrength);
             }
+            */
 
             e.intentImage.sprite = e.sprite_IntentAttack;
             e.intentAmtText.text = dmg.ToString();
@@ -93,6 +90,7 @@ public class EnemyManager : MonoBehaviour
             e.intentImage.sprite = e.sprite_IntentDefense;
             e.intentAmtText.text = "";
             break;
+         /*
          case EnemyIntentsType.BUFF:
             e.intentImage.sprite = e.sprite_IntentBuff;
             e.intentAmtText.text = "";
@@ -101,13 +99,13 @@ public class EnemyManager : MonoBehaviour
             e.intentImage.sprite = e.sprite_IntentDisable;
             e.intentAmtText.text = "";
             break;
+         */
       }
    }
 
    public IEnumerator TakeEnemyTurn(Enemy e)
    {
       yield return new WaitForSeconds(0.5f);
-      //do intent and VFX
       for (int i = 0; i < e.thisTurnIntent.Count; i++)
       {
          switch (e.thisTurnIntent[i].intent[i])
@@ -118,7 +116,7 @@ public class EnemyManager : MonoBehaviour
             case EnemyIntentsType.DEFEND:
                e.AddDefense(e.thisTurnIntentStrength);
                break;
-            case EnemyIntentsType.BUFF:
+            /*case EnemyIntentsType.BUFF:
                //To do: add status effect to enemy
                break;
             case EnemyIntentsType.DISABLE:
@@ -128,6 +126,7 @@ public class EnemyManager : MonoBehaviour
                   CombatManager.instance.AddEffect(e.thisTurnIntent[i].intentEffects[j].effect, e.thisTurnIntent[i].intentEffects[j].effectTurns+1);
                }
                break;
+            */
          }
       }
 
@@ -135,10 +134,10 @@ public class EnemyManager : MonoBehaviour
       EndEnemyTurn();
    }
 
-   public void EndEnemyTurn()
+   private void EndEnemyTurn()
    {
       //To do: reduce player status effects at end of turn
-      CombatManager.instance.ReduceAllEffectsOnPlayer();
+      //CombatManager.instance.ReduceAllEffectsOnPlayer();
 
       CardManager.instance.StartNewTurn();
    }

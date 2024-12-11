@@ -88,7 +88,8 @@ public class CardManager : MonoBehaviour
         }
 
         int r = Random.Range(0, EnemyManager.instance.enemyDictionary.Count);
-
+       
+        /*
         if (EffectsManager.instance.playerStatusContainer.childCount > 0)
         {
             for (int i = CombatManager.instance.currentStatusEffects.Count - 1; i >= 0; i--)
@@ -98,7 +99,7 @@ public class CardManager : MonoBehaviour
                 CombatManager.instance.currentStatusEffects.RemoveAt(i);
             }
         }
-        
+        */
         
         UIManager.instance.endMatchGO.SetActive(false);
 
@@ -107,7 +108,7 @@ public class CardManager : MonoBehaviour
     }
 
     //Happens at the beginning of combat (each enemy)
-    public void LoadDeck()
+    private void LoadDeck()
     {
         for (int i = 0; i < currentAvailableCards.Count; i++)
         {
@@ -149,7 +150,7 @@ public class CardManager : MonoBehaviour
     }
     
     //first time we draw cards each turn
-    public void InitialDrawForTurn()
+    private void InitialDrawForTurn()
     {
         currentTurn = CurrentTurn.PLAYERTURN;
 
@@ -171,7 +172,7 @@ public class CardManager : MonoBehaviour
         UpdateDisplay();
     }
 
-    public void DrawCard()
+    private void DrawCard()
     {
         //amount of cards in draw pile
         if (drawContainer.childCount > 0)
@@ -211,7 +212,7 @@ public class CardManager : MonoBehaviour
         UpdateDisplay();
     }
 
-    public void ReshuffleDeck()
+    private void ReshuffleDeck()
     {
         for (int i = discardContainer.childCount - 1; i >= 0; i--)
         {
@@ -242,7 +243,7 @@ public class CardManager : MonoBehaviour
         }
     }
 
-    public void ResetCardTransform(Transform card)
+    private void ResetCardTransform(Transform card)
     {
         card.localPosition = Vector2.zero;
     }
@@ -255,7 +256,7 @@ public class CardManager : MonoBehaviour
     public void StartNewTurn()
     {
         CombatManager.instance.currentBlock = 0;
-        CombatManager.instance.currentEnemy.ReduceStatusEffectsOnNewTurn();
+        //CombatManager.instance.currentEnemy.ReduceStatusEffectsOnNewTurn();
 
         isStartingDraw = true;
         InitialDrawForTurn();

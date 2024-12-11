@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5de5fbd96bc0ab44ab26f928373b885d, type: 3}
-  m_Name: Raio
+  m_Name: Furacao
   m_EditorClassIdentifier: 
-  cardName: Raio
+  cardName: "Furac\xE3o"
   type: 1
   cardStamina: 1
-  cardDescription: Causa S de dano
-  cardVideo: {fileID: 32900000, guid: 13eb585afeaae964f84cdd180c900173, type: 3}
-  strength: 7
+  cardDescription: Causa S de dano e compra 2 cartas
+  cardVideo: {fileID: 32900000, guid: 0f1bb53e91c32bc48bb04a125cc9566a, type: 3}
+  strength: 8
   defense: 0
-  cardDrawAmount: 0
+  cardDrawAmount: 2
   cure: 0
   cardEffects: []

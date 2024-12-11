@@ -5,6 +5,7 @@ using UnityEngine.Serialization;
 
 public class EffectsManager : MonoBehaviour
 {
+    /*
     public static EffectsManager instance;
 
     public EffectDataSO vulnerable;
@@ -96,4 +97,5 @@ public class EffectsManager : MonoBehaviour
                 break;
         }
     }
+    */
 }

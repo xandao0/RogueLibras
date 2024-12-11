@@ -28,8 +28,8 @@ public class CombatManager : MonoBehaviour
         }
     }
 
-    public List<StatusEffects> currentStatusEffects = new List<StatusEffects>();
-    public List<int> currentStatusEffectsLengths = new List<int>();
+    //public List<StatusEffects> currentStatusEffects = new List<StatusEffects>();
+    //public List<int> currentStatusEffectsLengths = new List<int>();
     
     private void Awake()
     {
@@ -85,12 +85,14 @@ public class CombatManager : MonoBehaviour
     public void TakeDamage(int d)
     {
         int dmg = d;
-
+        
+        /*
         if (currentStatusEffects.Contains(StatusEffects.VULNERABLE))
         {
             dmg = Mathf.RoundToInt(dmg * EffectsManager.instance.GetStatusEffect(StatusEffects.VULNERABLE)
                 .effectStrength);
         }
+        */
 
         if (currentBlock >= dmg)
             currentBlock -= dmg;
@@ -113,7 +115,7 @@ public class CombatManager : MonoBehaviour
         CardManager.instance.UpdateDisplay();
     }
 
-    public void AddEffect(StatusEffects effect, int length)
+    /*public void AddEffect(StatusEffects effect, int length)
     {
         if (!currentStatusEffects.Contains(effect))
         {
@@ -153,5 +155,5 @@ public class CombatManager : MonoBehaviour
         }
         
         EffectsManager.instance.UpdateUIStatusContainer();
-    }
+    }*/
 }
