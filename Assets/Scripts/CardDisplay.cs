@@ -31,6 +31,13 @@ public class CardDisplay : MonoBehaviour
     public int defense;
     public int cardDraw;
     public int cure;
+
+    [SerializeField] private AudioClip _attackSFX;
+    [SerializeField] private AudioClip _defenseSFX;
+    [SerializeField] private AudioClip _itemSFX;
+    [SerializeField] private GameObject _particle;
+
+    private AudioSource _audioSource;
     
     private RenderTexture uniqueRenderTexture;
     
@@ -38,7 +45,7 @@ public class CardDisplay : MonoBehaviour
     private void Start()
     {
         CollectInfoFromCardSo();
-        
+        _audioSource = GetComponent<AudioSource>();
     }
 
     private void CollectInfoFromCardSo()
@@ -282,6 +289,8 @@ public class CardDisplay : MonoBehaviour
         {
             if (CardManager.instance.CanUseCard((this)))
             {
+	            Instantiate(_particle, transform.position, transform.rotation, transform.parent.parent);
+
                 CardManager.instance.currentStamina -= cardStamina;
                 
                 //after the stamina has been removed, do cool card stuff
@@ -289,10 +298,11 @@ public class CardDisplay : MonoBehaviour
                 {
                     case CardTypes.ATAQUE:
                         CombatManager.instance.Attack(strength, this);
+                        _audioSource.PlayOneShot(_attackSFX);
                         break;
                     case CardTypes.DEFESA:
                         CombatManager.instance.AddDefense(defense, this);
-
+                        _audioSource.PlayOneShot(_defenseSFX);
                         if (cardDraw > 0)
                         {
                             StartCoroutine(CardManager.instance.DrawCards(this));
@@ -303,6 +313,7 @@ public class CardDisplay : MonoBehaviour
                         }
                         break;
                     case CardTypes.ITEM:
+	                    _audioSource.PlayOneShot(_itemSFX);
                         if (cure > 0)
                         {
                             CombatManager.instance.Heal(cure, this);
@@ -311,7 +322,7 @@ public class CardDisplay : MonoBehaviour
                     case CardTypes.BOOST:
                         break;
                 }
-                
+
                 UIManager.instance.UpdateDisplay();
             }
         }
