@@ -14,6 +14,8 @@ public class UIManager : MonoBehaviour
 
    public GameObject endMatchGO;
 
+   public GameObject endGameGO;
+
    private void Awake()
    {
       if (instance != null && instance != this)

@@ -53,6 +53,8 @@ public class Enemy : MonoBehaviour
     public List<StatusEffects> currentStatusEffects = new List<StatusEffects>();
     public List<int> currentStatusEffectLengths = new List<int>();
     public Transform enemyStatusEffectsContainer;
+    
+    public int c;
 
     private void Start()
     {
@@ -86,10 +88,17 @@ public class Enemy : MonoBehaviour
     {
         if (currentHP <= 0)
         {
+            
+            Console.WriteLine("TESTE"); 
             currentHP = 0;
-            //show end match screen
-            UIManager.instance.endMatchGO.SetActive(true);
-            Destroy(gameObject);
+                /*UIManager.instance.endGameGO.SetActive(true);
+                Destroy(gameObject);*/
+                
+               //show end match screen
+                UIManager.instance.endMatchGO.SetActive(true);
+                Destroy(gameObject); 
+            
+            
         }
 
         if (currentHP > maxHP)
@@ -124,6 +133,7 @@ public class Enemy : MonoBehaviour
         else
         {
             dmg -= blockedDemage;
+            blockedDemage = 0;
 
             CurrentHP -= dmg;
         }

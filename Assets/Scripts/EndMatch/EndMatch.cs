@@ -11,6 +11,7 @@ public class EndMatch : MonoBehaviour
         GameManager.ChangeState(GameStates.ENDMATCH);
         CardManager.instance.endTurnButton.interactable = false;
         
+        
         List<CardDataSo> allCards = new List<CardDataSo>();
         allCards.AddRange(CardManager.instance.allCardsThatExist);
 

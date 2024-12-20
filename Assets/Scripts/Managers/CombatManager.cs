@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 
 public class CombatManager : MonoBehaviour
@@ -102,6 +103,11 @@ public class CombatManager : MonoBehaviour
             currentBlock = 0;
             CurrentHealth -= dmg;
         }
+        
+        if (currentHealth <= 0)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+        }
     }
 
     public void Heal(int d, CardDisplay card)
@@ -114,6 +120,7 @@ public class CombatManager : MonoBehaviour
 
         CardManager.instance.UpdateDisplay();
     }
+    
 
     /*public void AddEffect(StatusEffects effect, int length)
     {
