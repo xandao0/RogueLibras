@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: Faca
   type: 1
-  cardStamina: 1
+  cardStamina: 2
   cardDescription: Causa S de dano
   cardVideo: {fileID: 32900000, guid: 79a808473613d6c4b889c6a3edfdcba6, type: 3}
   strength: 10

@@ -18,6 +18,12 @@ public class EnemyManager : MonoBehaviour
    public List<EnemyDataSO> enemyIndexedData = new List<EnemyDataSO>();
    public Dictionary<int, EnemyDataSO> enemyDictionary = new Dictionary<int, EnemyDataSO>(); 
    
+   // Variável para controlar o bônus de vida acumulado
+   private int bonusHealth = 0; // Começa com 0 de bônus de vida
+
+   // Contador de inimigos derrotados
+   public int defeatedEnemiesCount = 0;
+   
    private void Awake()
    {
       if (instance != null && instance != this)
@@ -46,7 +52,22 @@ public class EnemyManager : MonoBehaviour
       Enemy e = g.GetComponent<Enemy>();
       
       e.eData = enemyDictionary[r];
+      
+      // Calcula a vida máxima do inimigo com o bônus de vida acumulado
+      int newMaxHP = e.eData.maxHP + (bonusHealth);
+
+      // Atualiza as informações do inimigo
+      e.maxHP = newMaxHP;  // Define a nova vida máxima
+      e.CurrentHP = newMaxHP;  // Inicializa com a vida máxima
+      
       CombatManager.instance.currentEnemy = e; 
+   }
+   
+   // Método chamado quando o inimigo é derrotado
+   public void OnEnemyDefeated()
+   {
+      // Incrementa o contador de inimigos derrotados
+      defeatedEnemiesCount++;
    }
 
    public void ChooseIntentsForNextTurn(Enemy e)

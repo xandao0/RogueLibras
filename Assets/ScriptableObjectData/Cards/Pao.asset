@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: "P\xE3o"
   type: 3
-  cardStamina: 1
+  cardStamina: 2
   cardDescription: Cura C de vida
   cardVideo: {fileID: 32900000, guid: 474305b5ca44bc142a4f30863e9bf6fc, type: 3}
   strength: 0

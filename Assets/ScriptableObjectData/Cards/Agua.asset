@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: Agua
   type: 2
-  cardStamina: 1
+  cardStamina: 2
   cardDescription: Defende D e cura C
   cardVideo: {fileID: 32900000, guid: fd8ded07715ccb34a95e0ef6b410b947, type: 3}
   strength: 0

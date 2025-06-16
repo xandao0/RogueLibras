@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: "Furac\xE3o"
   type: 1
-  cardStamina: 1
+  cardStamina: 2
   cardDescription: Causa S de dano e compra 2 cartas
   cardVideo: {fileID: 32900000, guid: 0f1bb53e91c32bc48bb04a125cc9566a, type: 3}
   strength: 8

@@ -18,7 +18,7 @@ MonoBehaviour:
   cardDescription: Defende D e compra 1 carta
   cardVideo: {fileID: 32900000, guid: 316bccb3b63cf5c49ab3f939576d2278, type: 3}
   strength: 0
-  defense: 2
+  defense: 4
   cardDrawAmount: 1
   cure: 0
   cardEffects: []
