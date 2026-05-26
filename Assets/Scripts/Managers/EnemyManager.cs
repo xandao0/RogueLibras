@@ -6,160 +6,131 @@ using Random = UnityEngine.Random;
 
 public class EnemyManager : MonoBehaviour
 {
-   public static EnemyManager instance;
+   public static EnemyManager instance { get; private set; }
 
+   [Header("Setup")]
    public Transform spawnSpot;
-
    public GameObject enemyPrefab;
 
-   [Header("ALL ENEMY DATA HERE")] 
-   public List<int> enemyIndex = new List<int>();
-
+   [Header("Enemy Data")] 
+   [Tooltip("Insira os Scriptable Objects dos inimigos aqui.")]
    public List<EnemyDataSO> enemyIndexedData = new List<EnemyDataSO>();
-   public Dictionary<int, EnemyDataSO> enemyDictionary = new Dictionary<int, EnemyDataSO>(); 
    
-   // Variável para controlar o bônus de vida acumulado
-   private int bonusHealth = 0; // Começa com 0 de bônus de vida
-
-   // Contador de inimigos derrotados
-   public int defeatedEnemiesCount = 0;
+   [Header("Settings & Stats")]
+   [SerializeField] private int bonusHealth = 0; // Controla o bônus de vida acumulado
+   public int defeatedEnemiesCount { get; private set; } = 0;
    
    private void Awake()
    {
       if (instance != null && instance != this)
       {
-         Destroy(this.gameObject);
+         Destroy(gameObject);
          return;
       }
-
       instance = this;
-      
-      for (int i = 0; i < enemyIndexedData.Count; i++)
-      {
-         enemyIndex.Add(i);
-      }
-
-      for (int i = 0; i < enemyIndex.Count; i++)
-      {
-         enemyDictionary.Add(i, enemyIndexedData[i]);
-      }
    }
 
    public void SpawnEnemy()
    {
-      int r = Random.Range(0, enemyDictionary.Count);
-      GameObject g = Instantiate(enemyPrefab, spawnSpot);
-      Enemy e = g.GetComponent<Enemy>();
-      
-      e.eData = enemyDictionary[r];
-      
-      // Calcula a vida máxima do inimigo com o bônus de vida acumulado
-      int newMaxHP = e.eData.maxHP + (bonusHealth);
+      if (enemyIndexedData.Count == 0)
+      {
+         Debug.LogError("Nenhum inimigo cadastrado na lista 'enemyIndexedData'!");
+         return;
+      }
 
-      // Atualiza as informações do inimigo
-      e.maxHP = newMaxHP;  // Define a nova vida máxima
-      e.CurrentHP = newMaxHP;  // Inicializa com a vida máxima
+      int randomIndex = Random.Range(0, enemyIndexedData.Count);
+      EnemyDataSO selectedData = enemyIndexedData[randomIndex];
+
+      GameObject spawnedObj = Instantiate(enemyPrefab, spawnSpot);
+      Enemy enemyComponent = spawnedObj.GetComponent<Enemy>();
       
-      CombatManager.instance.currentEnemy = e; 
+      enemyComponent.eData = selectedData;
+      
+      //Calcula e aplica a vida máxima com o bônus
+      int newMaxHP = selectedData.maxHP + bonusHealth;
+      enemyComponent.maxHP = newMaxHP;  
+      enemyComponent.CurrentHP = newMaxHP;  
+      
+      CombatManager.instance.currentEnemy = enemyComponent; 
    }
    
-   // Método chamado quando o inimigo é derrotado
    public void OnEnemyDefeated()
    {
-      // Incrementa o contador de inimigos derrotados
       defeatedEnemiesCount++;
    }
 
-   public void ChooseIntentsForNextTurn(Enemy e)
+   public void ChooseIntentsForNextTurn(Enemy enemy)
    {
-      int r = Random.Range(0, e.eData.allIntents.Length);
-      
-      e.thisTurnIntent.Clear();
+      if (enemy.eData.allIntents == null || enemy.eData.allIntents.Length == 0) return;
 
-      EnemyDataSO.EnemyIntents intent = e.eData.allIntents[r];
+      int randomIndex = Random.Range(0, enemy.eData.allIntents.Length);
+      enemy.thisTurnIntent.Clear();
+
+      EnemyDataSO.EnemyIntents intent = enemy.eData.allIntents[randomIndex];
 
       for (int i = 0; i < intent.intent.Length; i++)
       {
-         e.thisTurnIntent.Add(intent);
+         enemy.thisTurnIntent.Add(intent);
       }
 
-      e.thisTurnIntentStrength = intent.amount;
+      enemy.thisTurnIntentStrength = intent.amount;
 
-      switch (e.thisTurnIntent[0].intent[0])
+      if (enemy.thisTurnIntent.Count > 0 && intent.intent.Length > 0)
       {
-         case EnemyIntentsType.ATTACK:
-            int dmg = e.thisTurnIntentStrength;
-            
-            /*
-            if (CombatManager.instance.currentStatusEffects.Contains(StatusEffects.VULNERABLE))
-            {
-               dmg = Mathf.RoundToInt(dmg * EffectsManager.instance.GetStatusEffect(StatusEffects.VULNERABLE)
-                  .effectStrength);
-            }
+         EnemyIntentsType currentType = intent.intent[0];
 
-            if (CombatManager.instance.currentStatusEffects.Contains(StatusEffects.WEAK))
-            {
-               dmg = Mathf.RoundToInt(dmg * EffectsManager.instance.GetStatusEffect(StatusEffects.WEAK)
-                  .effectStrength);
-            }
-            */
+         switch (currentType)
+         {
+            case EnemyIntentsType.ATTACK:
+               int dmg = enemy.thisTurnIntentStrength;
+               enemy.intentImage.sprite = enemy.sprite_IntentAttack;
+               enemy.intentAmtText.text = dmg.ToString(); // Mostra o valor do ataque
+               break;
 
-            e.intentImage.sprite = e.sprite_IntentAttack;
-            e.intentAmtText.text = dmg.ToString();
-            break;
-         case EnemyIntentsType.DEFEND:
-            e.intentImage.sprite = e.sprite_IntentDefense;
-            e.intentAmtText.text = "";
-            break;
-         /*
-         case EnemyIntentsType.BUFF:
-            e.intentImage.sprite = e.sprite_IntentBuff;
-            e.intentAmtText.text = "";
-            break;
-         case EnemyIntentsType.DISABLE:
-            e.intentImage.sprite = e.sprite_IntentDisable;
-            e.intentAmtText.text = "";
-            break;
-         */
+            case EnemyIntentsType.DEFEND:
+               enemy.intentImage.sprite = enemy.sprite_IntentDefense;
+               enemy.intentAmtText.text = ""; 
+               break;
+         }
       }
    }
 
-   public IEnumerator TakeEnemyTurn(Enemy e)
+   public IEnumerator TakeEnemyTurn(Enemy enemy)
    {
       yield return new WaitForSeconds(0.5f);
-      for (int i = 0; i < e.thisTurnIntent.Count; i++)
+
+      for (int i = 0; i < enemy.thisTurnIntent.Count; i++)
       {
-         switch (e.thisTurnIntent[i].intent[i])
+         if (i >= enemy.thisTurnIntent[i].intent.Length) continue;
+
+         EnemyIntentsType currentType = enemy.thisTurnIntent[i].intent[i];
+
+         switch (currentType)
          {
             case EnemyIntentsType.ATTACK:
-               CombatManager.instance.TakeDamage((e.thisTurnIntentStrength));
+               CombatManager.instance.TakeDamage(enemy.thisTurnIntentStrength);
                break;
             case EnemyIntentsType.DEFEND:
-               e.AddDefense(e.thisTurnIntentStrength);
+               enemy.AddDefense(enemy.thisTurnIntentStrength);
                break;
-            /*case EnemyIntentsType.BUFF:
-               //To do: add status effect to enemy
-               break;
-            case EnemyIntentsType.DISABLE:
-               //To do: add status effect to player
-               for (int j = 0; j < e.thisTurnIntent[i].intentEffects.Length; j++)
-               {
-                  CombatManager.instance.AddEffect(e.thisTurnIntent[i].intentEffects[j].effect, e.thisTurnIntent[i].intentEffects[j].effectTurns+1);
-               }
-               break;
-            */
+               
+            //case EnemyIntentsType.BUFF:
+            //case EnemyIntentsType.DISABLE:
          }
       }
 
       yield return new WaitForSeconds(1.5f);
       EndEnemyTurn();
    }
+   
+   public int GetRandomEnemyIndex()
+   {
+      return Random.Range(0, enemyIndexedData.Count);
+   }
 
    private void EndEnemyTurn()
    {
-      //To do: reduce player status effects at end of turn
       //CombatManager.instance.ReduceAllEffectsOnPlayer();
-
       CardManager.instance.StartNewTurn();
    }
 }

@@ -96,9 +96,9 @@ public class Enemy : MonoBehaviour
 
         if (blockedDemage <= 0)
         {
-            blockedDemage = 0;
             healthSliderFill.color = Color.red;
             currentBlockedDisplay.SetActive(false);
+            blockedDemage = 0;
         }
     }
 
@@ -116,6 +116,7 @@ public class Enemy : MonoBehaviour
         }
 
         blockedAmtDisplay.text = blockedDemage.ToString();
+        HandleHealth();
     }
 
     public void HealHealth(int d)

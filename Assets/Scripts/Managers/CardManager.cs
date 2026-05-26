@@ -87,7 +87,7 @@ public class CardManager : MonoBehaviour
             }
         }
 
-        int r = Random.Range(0, EnemyManager.instance.enemyDictionary.Count);
+        int r = EnemyManager.instance.GetRandomEnemyIndex();
        
         /*
         if (EffectsManager.instance.playerStatusContainer.childCount > 0)
