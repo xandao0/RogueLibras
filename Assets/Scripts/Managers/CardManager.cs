@@ -1,56 +1,61 @@
 using System.Collections;
+using UnityEngine;
 using System.Collections.Generic;
 using TMPro;
-using UnityEngine;
 using UnityEngine.UI;
+
 
 public class CardManager : MonoBehaviour
 {
     public static CardManager instance;
 
-    [Header("Sub-Gerenciadores")]
-    public StaminaManager staminaManager;
-    public DeckPileManager pileManager;
-
-    [Header("Turn & Hand Config")]
+    #region Variables
     public CurrentTurn currentTurn;
-    public bool isStartingDraw;
+
+    public GameObject newCardPrefab;
+
+    public Transform drawContainer; //cards will sit inside this object when in draw pile
+    public Transform discardContainer; //cards will sit inside this object when in discard pile
+    public Transform cardHolderContainer;//spot on the screen that shows current cards in your hand
+    
+    [Header("Cards In Current Deck")]
+    //all cards that you currently have in your deck
+    public List<CardDataSo> currentAvailableCards = new List<CardDataSo>();
+    [Header("All Cards In Game")]
+    //all cards can exist in the game (place any newly created cardDataSO in this list)
+    public List<CardDataSo> allCardsThatExist = new List<CardDataSo>();
+    
+    [Header("Hand Size")]
+    //amount of cards drawn at start of turn
     public int startingHandSize = 5;
+    //cardHolderContainer can not have more than maxHandSize as the child objects
     public int maxHandSize = 10;
 
-    [Header("Card Lists")]
-    public List<CardDataSo> currentAvailableCards = new List<CardDataSo>();
-    public List<CardDataSo> allCardsThatExist = new List<CardDataSo>();
+    [Header("Stamina")]
+    //stamina at the start of every turn
+    public int staminaAtStart = 3;
+    //your current stamina left for current turn
+    public int currentStamina = 3;
 
-    [Header("UI References")]
-    public TMP_Text drawPileText;
-    public TMP_Text discardPileText;
-    public Button endTurnButton;
+    public bool isStartingDraw;
     
-    public int currentStamina
-    {
-        get => staminaManager.currentStamina;
-        set => staminaManager.currentStamina = value;
-    }
-
-    public int staminaAtStart
-    {
-        get => staminaManager.staminaAtStart;
-        set => staminaManager.staminaAtStart = value;
-    }
-
-    public Transform drawContainer => pileManager.drawContainer;
-    public Transform discardContainer => pileManager.discardContainer;
-    public Transform cardHolderContainer => pileManager.cardHolderContainer;
-    public GameObject newCardPrefab => pileManager.newCardPrefab;
-
+    [Header("UI")]
+    //show how many cards left in draw pile
+    public TMP_Text drawPileText;
+    //show how many cards in discard pile
+    public TMP_Text discardPileText;
+    //reference to the button that ends your current turn
+    public Button endTurnButton;
+    #endregion
     private void Awake()
     {
+        //if a new scene starts and an object exists already with this script on it, then destroy that object
         if (instance != null && instance != this)
         {
-            Destroy(gameObject);
+            Destroy(this.gameObject);
             return;
         }
+
         instance = this;
     }
 
@@ -62,47 +67,99 @@ public class CardManager : MonoBehaviour
 
     public IEnumerator ResetCombatWithNewDeck()
     {
-        yield return pileManager.ClearContainers();
+        yield return null;
+
+        if (drawContainer.childCount > 0)
+        {
+            for (int i = drawContainer.childCount - 1; i >= 0; i--)
+            {
+                Destroy(drawContainer.GetChild(i).gameObject);
+                yield return null;
+            }
+        }
+        
+        if (discardContainer.childCount > 0)
+        {
+            for (int i = discardContainer.childCount - 1; i >= 0; i--)
+            {
+                Destroy(discardContainer.GetChild(i).gameObject);
+                yield return null;
+            }
+        }
 
         int r = EnemyManager.instance.GetRandomEnemyIndex();
+       
+        /*
+        if (EffectsManager.instance.playerStatusContainer.childCount > 0)
+        {
+            for (int i = CombatManager.instance.currentStatusEffects.Count - 1; i >= 0; i--)
+            {
+                EffectsManager.instance.RemoveStatus(EffectsManager.instance.playerStatusContainer.GetChild(i).gameObject);
+                CombatManager.instance.currentStatusEffectsLengths.RemoveAt(i);
+                CombatManager.instance.currentStatusEffects.RemoveAt(i);
+            }
+        }
+        */
+        
         UIManager.instance.endMatchGO.SetActive(false);
 
         isStartingDraw = true;
         LoadDeck();
     }
 
+    //Happens at the beginning of combat (each enemy)
     private void LoadDeck()
     {
         for (int i = 0; i < currentAvailableCards.Count; i++)
         {
-            pileManager.InstantiateCard(currentAvailableCards[i]);
+            GameObject g = Instantiate(newCardPrefab, drawContainer);
+            //set the Card to the CardData for the cloned prefab
+            //set the card's name in hierarchy
+            g.GetComponent<CardDisplay>().card = currentAvailableCards[i];
+            g.name = g.GetComponent<CardDisplay>().card.cardName;
+            
         }
 
         UpdateDisplay();
         EnemyManager.instance.SpawnEnemy();
+
         InitialDrawForTurn();
     }
+    
+    
 
     public void UpdateDisplay()
     {
-        drawPileText.text = pileManager.drawContainer.childCount.ToString();
-        discardPileText.text = pileManager.discardContainer.childCount.ToString();
+        drawPileText.text = drawContainer.childCount.ToString();
+        discardPileText.text = discardContainer.childCount.ToString();
 
-        for (int i = 0; i < pileManager.cardHolderContainer.childCount; i++)
+        for (int i = 0; i < cardHolderContainer.childCount; i++)
         {
-            CardDisplay c = pileManager.cardHolderContainer.GetChild(i).GetComponent<CardDisplay>();
-            c.cardStaminaText.color = CanUseCard(c) ? Color.blue : Color.white;
+            //check if you can use each card in your hand and change the color of the stamina cost accordingly
+            CardDisplay c = cardHolderContainer.transform.GetChild(i).GetComponent<CardDisplay>();
+
+            if (CanUseCard(c))
+            {
+                c.cardStaminaText.color = Color.blue;
+            }
+            else
+            {
+                c.cardStaminaText.color = Color.white;
+            }
         }
     }
-
+    
+    //first time we draw cards each turn
     private void InitialDrawForTurn()
     {
         currentTurn = CurrentTurn.PLAYERTURN;
-        endTurnButton.interactable = true;
-        staminaManager.ResetStamina();
-        CombatManager.instance.currentEnemy.OnNewTurn();
 
-        if (pileManager.cardHolderContainer.childCount < startingHandSize)
+        endTurnButton.interactable = true;
+        currentStamina = staminaAtStart;
+        CombatManager.instance.currentEnemy.OnNewTurn();
+        
+        //if the starting hand size is larger than the current hand, then draw a card. Otherwise, don't
+        if (cardHolderContainer.childCount < startingHandSize)
         {
             DrawCard();
         }
@@ -110,18 +167,24 @@ public class CardManager : MonoBehaviour
         {
             isStartingDraw = false;
         }
-
+        
         UIManager.instance.UpdateDisplay();
         UpdateDisplay();
     }
 
     private void DrawCard()
     {
-        if (pileManager.drawContainer.childCount > 0)
+        //amount of cards in draw pile
+        if (drawContainer.childCount > 0)
         {
-            pileManager.MoveRandomToHand();
+            //draw a card
+            int random = Random.Range(0, drawContainer.childCount);
+            Transform cardToDraw = drawContainer.GetChild(random);
+            cardToDraw.SetParent(cardHolderContainer);
+            //drawContainer.GetChild(r).transform.parent = cardHolderContainer;
+
         }
-        else
+        else if (drawContainer.childCount <= 0)
         {
             ReshuffleDeck();
         }
@@ -143,39 +206,67 @@ public class CardManager : MonoBehaviour
         }
 
         yield return new WaitForEndOfFrame();
+
         DiscardCard(card);
+        
         UpdateDisplay();
     }
 
-    public void ReshuffleDeck()
+    private void ReshuffleDeck()
     {
-        pileManager.ReshuffleDiscardToDraw();
+        for (int i = discardContainer.childCount - 1; i >= 0; i--)
+        {
+            Transform tempCard = discardContainer.GetChild(i);
+
+            //tempCard.transform.parent = drawContainer;
+            tempCard.transform.SetParent(drawContainer);
+            ResetCardTransform(tempCard);
+        }
+        
         UpdateDisplay();
     }
 
     public void DiscardCard(CardDisplay c)
     {
-        pileManager.DiscardCard(c);
-        UpdateDisplay();
+        for (int i = 0; i < cardHolderContainer.childCount; i++)
+        {
+            if (cardHolderContainer.GetChild(i).GetComponent<CardDisplay>() == c)
+            {
+                Transform temp = cardHolderContainer.GetChild(i);
+
+                temp.transform.parent = discardContainer;
+                ResetCardTransform(temp);
+                UpdateDisplay();
+
+                return;
+            }
+        }
     }
 
+    private void ResetCardTransform(Transform card)
+    {
+        card.localPosition = Vector2.zero;
+    }
+    
     public bool CanUseCard(CardDisplay c)
     {
-        return staminaManager.HasEnoughStamina(c.cardStamina);
+        return currentStamina > 0 && c.cardStamina <= currentStamina;
     }
 
     public void StartNewTurn()
     {
         CombatManager.instance.currentBlock = 0;
+        //CombatManager.instance.currentEnemy.ReduceStatusEffectsOnNewTurn();
+
         isStartingDraw = true;
         InitialDrawForTurn();
     }
 
     public void EndTurn()
     {
-        for (int i = pileManager.cardHolderContainer.childCount - 1; i >= 0; i--)
+        for (int i = cardHolderContainer.childCount - 1; i >= 0; i--)
         {
-            DiscardCard(pileManager.cardHolderContainer.GetChild(i).GetComponent<CardDisplay>());
+            DiscardCard(cardHolderContainer.GetChild(i).GetComponent<CardDisplay>());
         }
 
         endTurnButton.interactable = false;
