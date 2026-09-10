@@ -1,0 +1,11 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="30" height="18" viewBox="485 491 30 18">
+
+              <style>
+                path, text, g, .sym-line, [font-family*="Line"] { fill: #4b1b00 !important; }
+                [fill="white"], [fill="#ffffff"], [fill="#fff"], .sym-fill, [font-family*="Fill"] { fill: none !important; }
+              </style>
+            
+
+  <text font-size="0">M515x509S1f240485x491</text>
+  <svg x="485" y="491"><g transform="translate(0.150315673672,17.7531695542) scale(0.00986702881642,-0.00983127191601)"><path class="sym-fill" fill="#ffffff" d="M1860 710 l0 -520 260 0 260 0 0 520 0 520 -260 0 -260 0 0 -520z"/><path class="sym-line" d="M240 1694 c-58 -52 -106 -99 -108 -103 -2 -5 34 -43 79 -85 l82 -76 -146 0 -147 0 0 -100 0 -100 258 -1 257 0 460 -424 c253 -233 463 -424 468 -425 4 0 7 92 7 204 l0 205 -239 218 -240 218 240 3 239 2 0 100 0 100 -352 0 -353 1 -195 179 c-107 99 -197 180 -200 180 -3 0 -52 -43 -110 -96z M1650 715 l0 -715 675 0 675 0 0 715 0 715 -675 0 -675 0 0 -715z m730 -5 l0 -520 -260 0 -260 0 0 520 0 520 260 0 260 0 0 -520z"/></g></svg>
+</svg>
