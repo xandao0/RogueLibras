@@ -1,0 +1,116 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67a459ed8ca0aa3418579ed1ff71ad75, type: 3}
+  m_Name: SignWritingLibrary
+  m_EditorClassIdentifier: 
+  entries:
+  - key: agua
+    signs:
+    - {fileID: 3286163911610860551, guid: 5c7e619739e637f49b0e9a9a5653a2d4, type: 3}
+  - key: bloqueio
+    signs:
+    - {fileID: 3286163911610860551, guid: 0242e75e7ea7a7340aec3f2cf49384e5, type: 3}
+  - key: carta_comum
+    signs:
+    - {fileID: 3286163911610860551, guid: b7a97df275a781543856a2ef8b261816, type: 3}
+    - {fileID: 3286163911610860551, guid: 7770fb12120c38f48a1e14c973176695, type: 3}
+  - key: combinacao
+    signs:
+    - {fileID: 3286163911610860551, guid: c55a07ae5297f9245bbcc535a9ce9e1d, type: 3}
+  - key: compra
+    signs:
+    - {fileID: 3286163911610860551, guid: f3098b272f239f544b8b9eefb90350b2, type: 3}
+  - key: curar
+    signs:
+    - {fileID: 3286163911610860551, guid: 1521c75bfa2e75145abd887b0d232f23, type: 3}
+  - key: dano
+    signs:
+    - {fileID: 3286163911610860551, guid: 975c92f80fad4fa4582309ee6e2aeb37, type: 3}
+  - key: defesa
+    signs:
+    - {fileID: 3286163911610860551, guid: d967f1bd8a7012d4f8cf25c5489dc0f6, type: 3}
+  - key: descarte
+    signs:
+    - {fileID: 3286163911610860551, guid: 3e117904370bfae4ea4c0987c970bcb8, type: 3}
+  - key: encerrar_turno
+    signs:
+    - {fileID: 3286163911610860551, guid: 2fb2175d8daefcb4ab8908528869e07b, type: 3}
+    - {fileID: 3286163911610860551, guid: 9aed876d6f7113044b74681bedbd74b5, type: 3}
+  - key: energia
+    signs:
+    - {fileID: 3286163911610860551, guid: 5981b8ec4fda23c48b38bc67dc0c94fd, type: 3}
+  - key: escudo
+    signs:
+    - {fileID: 3286163911610860551, guid: 8dc23ec1e65f9204cb5d460b4b760893, type: 3}
+  - key: espelho
+    signs:
+    - {fileID: 3286163911610860551, guid: c2cbfb8438eba7a49b6ca2d85d79fb02, type: 3}
+  - key: faca
+    signs:
+    - {fileID: 3286163911610860551, guid: 3ed5713d209c1f24494f161b5f967a7e, type: 3}
+  - key: ferro
+    signs:
+    - {fileID: 3286163911610860551, guid: 588a6cd2c8583394ca9b31710f59d0d2, type: 3}
+  - key: fogo
+    signs:
+    - {fileID: 3286163911610860551, guid: 3d72d7ee08c238f44b0529e73ff485cf, type: 3}
+  - key: furacao
+    signs:
+    - {fileID: 3286163911610860551, guid: 6647e4298dddf6c4e9fe2fac0d9ebed9, type: 3}
+  - key: gelo
+    signs:
+    - {fileID: 3286163911610860551, guid: 59d66a2d4b30e9a40b039d2c2a8c75aa, type: 3}
+  - key: maca
+    signs:
+    - {fileID: 3286163911610860551, guid: db0cf85ba8660f44ab175f4e12871dbd, type: 3}
+  - key: numero_1
+    signs:
+    - {fileID: 3286163911610860551, guid: 2deb48b7023769d43a8e7fa35167c626, type: 3}
+  - key: numero_10
+    signs:
+    - {fileID: 3286163911610860551, guid: 930987422e2e7ea448360725038a25df, type: 3}
+  - key: numero_2
+    signs:
+    - {fileID: 3286163911610860551, guid: 60de9d7df2e3ebe488f2c936da66b8c1, type: 3}
+  - key: numero_3
+    signs:
+    - {fileID: 3286163911610860551, guid: 0c43e9f5bfefedd418ffed6910944608, type: 3}
+  - key: numero_4
+    signs:
+    - {fileID: 3286163911610860551, guid: d5597c8075dc5194ab43107437f8331c, type: 3}
+  - key: numero_5
+    signs:
+    - {fileID: 3286163911610860551, guid: 286e257f503e3cb458cf7dae966432b0, type: 3}
+  - key: numero_6
+    signs:
+    - {fileID: 3286163911610860551, guid: fff04167dcb87834bab9a9957314cf37, type: 3}
+  - key: numero_7
+    signs:
+    - {fileID: 3286163911610860551, guid: 8274bd9c8261b5247a23ed5977230be5, type: 3}
+  - key: numero_8
+    signs:
+    - {fileID: 3286163911610860551, guid: d8665ec8a9b339743abad1e9466f655e, type: 3}
+  - key: numero_9
+    signs:
+    - {fileID: 3286163911610860551, guid: c0513d528cc2ac3499d9501d2109a8ff, type: 3}
+  - key: raio
+    signs:
+    - {fileID: 3286163911610860551, guid: fe9687841b2ae8f48b8a01d26430b373, type: 3}
+  - key: tempestade
+    signs:
+    - {fileID: 3286163911610860551, guid: 93b79b53b130dc94b892aa49a8126698, type: 3}
+  - key: veneno
+    signs:
+    - {fileID: 3286163911610860551, guid: 4b21f7502eba1f2409979168ee4597c2, type: 3}
+  - key: vida
+    signs:
+    - {fileID: 3286163911610860551, guid: dd59577238276e04a931eca46012b05d, type: 3}

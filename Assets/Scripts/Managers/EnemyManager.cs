@@ -28,7 +28,15 @@ public class EnemyManager : MonoBehaviour
          return;
       }
       instance = this;
+
+      // Loading a save: carry on the run's difficulty from where it was. Set in
+      // Awake so it is in place before the first enemy reads it in its Start.
+      SaveData save = SaveSystem.Pending;
+      if (save != null) defeatedEnemiesCount = Mathf.Max(0, save.defeatedEnemies);
    }
+
+   // The first enemy after loading a save is the one the player was fighting.
+   private bool _savedEnemyUsed;
 
    public void SpawnEnemy()
    {
@@ -38,20 +46,35 @@ public class EnemyManager : MonoBehaviour
          return;
       }
 
-      int randomIndex = Random.Range(0, enemyIndexedData.Count);
-      EnemyDataSO selectedData = enemyIndexedData[randomIndex];
+      EnemyDataSO selectedData = null;
+      int restoreHP = -1;
+
+      SaveData save = SaveSystem.Pending;
+      if (!_savedEnemyUsed && save != null && !string.IsNullOrEmpty(save.enemyDataName))
+      {
+         selectedData = enemyIndexedData.Find(d => d != null && d.name == save.enemyDataName);
+         if (selectedData != null) restoreHP = save.enemyHP;
+      }
+      _savedEnemyUsed = true;
+
+      if (selectedData == null)
+      {
+         int randomIndex = Random.Range(0, enemyIndexedData.Count);
+         selectedData = enemyIndexedData[randomIndex];
+      }
 
       GameObject spawnedObj = Instantiate(enemyPrefab, spawnSpot);
       Enemy enemyComponent = spawnedObj.GetComponent<Enemy>();
-      
+
       enemyComponent.eData = selectedData;
-      
+      enemyComponent.restoreHP = restoreHP;
+
       //Calcula e aplica a vida máxima com o bônus
       int newMaxHP = selectedData.maxHP + bonusHealth;
-      enemyComponent.maxHP = newMaxHP;  
-      enemyComponent.CurrentHP = newMaxHP;  
-      
-      CombatManager.instance.currentEnemy = enemyComponent; 
+      enemyComponent.maxHP = newMaxHP;
+      enemyComponent.CurrentHP = newMaxHP;
+
+      CombatManager.instance.currentEnemy = enemyComponent;
    }
    
    public void OnEnemyDefeated()
@@ -97,29 +120,38 @@ public class EnemyManager : MonoBehaviour
 
    public IEnumerator TakeEnemyTurn(Enemy enemy)
    {
-      yield return new WaitForSeconds(0.5f);
+      yield return new WaitForSeconds(0.3f);
 
-      for (int i = 0; i < enemy.thisTurnIntent.Count; i++)
+      for (int i = 0; enemy != null && i < enemy.thisTurnIntent.Count; i++)
       {
          if (i >= enemy.thisTurnIntent[i].intent.Length) continue;
 
          EnemyIntentsType currentType = enemy.thisTurnIntent[i].intent[i];
+         int amount = enemy.thisTurnIntentStrength;
+         Action impact = null;
 
          switch (currentType)
          {
             case EnemyIntentsType.ATTACK:
-               CombatManager.instance.TakeDamage(enemy.thisTurnIntentStrength);
+               impact = () => CombatManager.instance.TakeDamage(amount);
                break;
             case EnemyIntentsType.DEFEND:
-               enemy.AddDefense(enemy.thisTurnIntentStrength);
+               impact = () => { if (enemy != null) enemy.AddDefense(amount); };
                break;
-               
+
             //case EnemyIntentsType.BUFF:
             //case EnemyIntentsType.DISABLE:
          }
+
+         if (impact == null) continue;
+
+         // The enemy winds up, telegraphs, and then acts; the damage or block
+         // lands on the frame the move connects rather than before it starts.
+         if (enemy.reaction != null) yield return enemy.reaction.Perform(currentType, impact);
+         else impact();
       }
 
-      yield return new WaitForSeconds(1.5f);
+      yield return new WaitForSeconds(0.45f);
       EndEnemyTurn();
    }
    

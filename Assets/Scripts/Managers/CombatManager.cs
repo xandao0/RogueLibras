@@ -45,9 +45,20 @@ public class CombatManager : MonoBehaviour
 
     private void Start()
     {
-        maxHealth = startingHealth;
-        CurrentHealth = maxHealth;
-        
+        // Loading a save: pick up with the health and block it had.
+        SaveData save = SaveSystem.Pending;
+        if (save != null && save.maxHealth > 0)
+        {
+            maxHealth = save.maxHealth;
+            CurrentHealth = save.currentHealth;
+            currentBlock = Mathf.Max(0, save.currentBlock);
+        }
+        else
+        {
+            maxHealth = startingHealth;
+            CurrentHealth = maxHealth;
+        }
+
         UIManager.instance.UpdateDisplay();
     }
 

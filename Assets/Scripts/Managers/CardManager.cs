@@ -46,6 +46,16 @@ public class CardManager : MonoBehaviour
     public TMP_Text discardPileText;
     //reference to the button that ends your current turn
     public Button endTurnButton;
+
+    [Header("Selection")]
+    //the card currently raised/enlarged in hand, awaiting a double-click to be used
+    public CardDisplay selectedCard;
+
+    [Header("VFX")]
+    //plays a brief "burning card" flash on the discard pile counter each discard
+    public DiscardBurnEffect discardBurnEffect;
+    //RogueLibras/UI Fire material, used for the "card burns away where it sat" effect
+    public Material cardBurnMaterial;
     #endregion
     private void Awake()
     {
@@ -61,6 +71,18 @@ public class CardManager : MonoBehaviour
 
     private void Start()
     {
+        // GameManager outlives scenes, so a battle can inherit ENDMATCH from the
+        // last one - where clicking a card claims it as a reward.
+        if (GameManager.instance != null) GameManager.ChangeState(GameStates.COMBAT);
+
+        // Loading a save: deal the first hand from the saved deck.
+        SaveData save = SaveSystem.Pending;
+        if (save != null)
+        {
+            var deck = SaveSystem.ResolveDeck(save.deckCardNames, allCardsThatExist);
+            if (deck.Count > 0) currentAvailableCards = deck;
+        }
+
         isStartingDraw = true;
         LoadDeck();
     }
@@ -133,19 +155,25 @@ public class CardManager : MonoBehaviour
         drawPileText.text = drawContainer.childCount.ToString();
         discardPileText.text = discardContainer.childCount.ToString();
 
+        //defensive: don't hold onto a selection for a card that left the hand
+        if (selectedCard != null && selectedCard.transform.parent != cardHolderContainer)
+        {
+            selectedCard = null;
+        }
+
         for (int i = 0; i < cardHolderContainer.childCount; i++)
         {
-            //check if you can use each card in your hand and change the color of the stamina cost accordingly
+            //affordability cue: keep the cost number in the card palette (#441700)
+            //and dim the whole energy badge when the card can't be paid for.
             CardDisplay c = cardHolderContainer.transform.GetChild(i).GetComponent<CardDisplay>();
 
-            if (CanUseCard(c))
-            {
-                c.cardStaminaText.color = Color.blue;
-            }
-            else
-            {
-                c.cardStaminaText.color = Color.white;
-            }
+            bool affordable = CanUseCard(c);
+
+            if (c.cardStaminaText != null)
+                c.cardStaminaText.color = new Color32(0x44, 0x17, 0x00, 0xFF);
+
+            if (c.energyBadgeImage != null)
+                c.energyBadgeImage.color = affordable ? Color.white : new Color(1f, 1f, 1f, 0.4f);
         }
     }
     
@@ -234,9 +262,21 @@ public class CardManager : MonoBehaviour
             {
                 Transform temp = cardHolderContainer.GetChild(i);
 
+                // A card the player actively used burns away in place; ordinary
+                // discards just slide off. The real card still goes straight to
+                // the discard pile so the deck stays intact.
+                bool played = c != null && c.ConsumePlayedFlag();
+                if (played) CardBurnAway.Spawn(c, cardBurnMaterial);
+
                 temp.transform.parent = discardContainer;
                 ResetCardTransform(temp);
                 UpdateDisplay();
+
+                if (discardBurnEffect != null)
+                {
+                    if (played) discardBurnEffect.PlayBig();
+                    else discardBurnEffect.Play();
+                }
 
                 return;
             }
@@ -246,8 +286,22 @@ public class CardManager : MonoBehaviour
     private void ResetCardTransform(Transform card)
     {
         card.localPosition = Vector2.zero;
+        card.localRotation = Quaternion.identity;
+        card.localScale = Vector3.one;
+
+        CanvasGroup cg = card.GetComponent<CanvasGroup>();
+        if (cg != null) cg.alpha = 1f;
+
+        if (selectedCard != null && selectedCard.transform == card) selectedCard = null;
     }
-    
+
+    //selects/raises a card in hand so it can be confirmed with a double-click;
+    //clicking the already-selected card puts it back down
+    public void SelectCard(CardDisplay c)
+    {
+        selectedCard = (selectedCard == c) ? null : c;
+    }
+
     public bool CanUseCard(CardDisplay c)
     {
         return currentStamina > 0 && c.cardStamina <= currentStamina;
@@ -260,6 +314,67 @@ public class CardManager : MonoBehaviour
 
         isStartingDraw = true;
         InitialDrawForTurn();
+
+        // After the hand is dealt, so the word that graduates is one the player
+        // can actually see this turn.
+        AdvanceSignProgression();
+    }
+
+    private readonly List<string> _signWordPool = new List<string>();
+
+    // One word per turn turns into SignWriting, drawn at random from everything
+    // readable in the current hand. Nothing happens for the first few turns.
+    private void AdvanceSignProgression()
+    {
+        _signWordPool.Clear();
+        for (int i = 0; i < cardHolderContainer.childCount; i++)
+        {
+            CardDisplay c = cardHolderContainer.GetChild(i).GetComponent<CardDisplay>();
+            if (c != null) c.CollectSignWords(_signWordPool);
+        }
+
+        string learned = SignProgression.OnTurnStarted(_signWordPool);
+        if (string.IsNullOrEmpty(learned)) return;
+
+        // Cards in hand that carry the word change under a shine the player can
+        // watch - after the new hand has fanned out, one card after another. The
+        // word may be on cards in the piles too; those just switch.
+        int revealed = 0;
+        foreach (Transform container in new Transform[] { cardHolderContainer, drawContainer, discardContainer })
+        {
+            if (container == null) continue;
+            for (int i = 0; i < container.childCount; i++)
+            {
+                CardDisplay c = container.GetChild(i).GetComponent<CardDisplay>();
+                if (c == null) continue;
+
+                if (container == cardHolderContainer && c.ShowsWord(learned))
+                    c.RevealSign(learned, signRevealDelay + signRevealStagger * revealed++);
+                else
+                    c.RefreshSignText();
+            }
+        }
+    }
+
+    [Header("Sign Reveal")]
+    [Tooltip("Seconds after the hand is dealt before a newly learned sign shines in.")]
+    [SerializeField] private float signRevealDelay = 0.55f;
+    [Tooltip("Extra delay per card when several cards in hand show the new sign.")]
+    [SerializeField] private float signRevealStagger = 0.12f;
+
+    /// Redraws the wording on every card in the battle - after the sign
+    /// progression changes underneath them.
+    public void RefreshAllCardText()
+    {
+        foreach (Transform container in new Transform[] { cardHolderContainer, drawContainer, discardContainer })
+        {
+            if (container == null) continue;
+            for (int i = 0; i < container.childCount; i++)
+            {
+                CardDisplay c = container.GetChild(i).GetComponent<CardDisplay>();
+                if (c != null) c.RefreshSignText();
+            }
+        }
     }
 
     public void EndTurn()

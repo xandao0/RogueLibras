@@ -27,6 +27,10 @@ public class Enemy : MonoBehaviour
 
     public SpriteRenderer enemyArt;
 
+    // Drives the lunge / flinch / guard beats. Optional: combat still works
+    // without it, it just plays silently.
+    public EnemyReaction reaction;
+
     [Header("Enemy Intents Display")] 
     public Image intentImage;
     public TMP_Text intentAmtText;
@@ -39,6 +43,10 @@ public class Enemy : MonoBehaviour
 
     public List<EnemyDataSO.EnemyIntents> thisTurnIntent = new List<EnemyDataSO.EnemyIntents>();
     public int thisTurnIntentStrength;
+
+    // Set by EnemyManager when this is the enemy a loaded save was fighting, so
+    // it comes back as wounded as it was. Below 1 means start at full health.
+    [HideInInspector] public int restoreHP = -1;
 
     [SerializeField] 
     private int currentHP;
@@ -54,6 +62,7 @@ public class Enemy : MonoBehaviour
 
     private void Start()
     {
+        if (reaction == null) reaction = GetComponent<EnemyReaction>();
         CollectInfoFromData();
     }
 
@@ -71,8 +80,8 @@ public class Enemy : MonoBehaviour
         strength = eData.strength;
 
         healthSlider.maxValue = maxHP;
-        enemyName.text = eName.ToUpper();
-        CurrentHP = maxHP;
+        enemyName.text = eName;   // Camel case as authored; no shouting
+        CurrentHP = restoreHP > 0 ? Mathf.Min(restoreHP, maxHP) : maxHP;
 
         enemyArt.sprite = eData.artwork;
     }
@@ -96,7 +105,9 @@ public class Enemy : MonoBehaviour
 
         if (blockedDemage <= 0)
         {
-            healthSliderFill.color = Color.red;
+            // The fill keeps whatever colour the prefab sets. Recolouring the
+            // health bar while blocking read as the bar itself changing state;
+            // the shield icon and its number already say the enemy is guarded.
             currentBlockedDisplay.SetActive(false);
             blockedDemage = 0;
         }
@@ -116,6 +127,7 @@ public class Enemy : MonoBehaviour
         }
 
         blockedAmtDisplay.text = blockedDemage.ToString();
+        if (reaction != null) reaction.PlayHurt();
         HandleHealth();
     }
 
@@ -131,10 +143,10 @@ public class Enemy : MonoBehaviour
         if (blockedDemage > 0)
         {
             currentBlockedDisplay.SetActive(true);
-            healthSliderFill.color = blockedColor;
             blockedAmtDisplay.text = blockedDemage.ToString();
         }
 
+        if (reaction != null) reaction.PlayDefend();
         HandleHealth();
     }
 

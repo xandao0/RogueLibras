@@ -38,7 +38,7 @@ public class Status : MonoBehaviour
 
         statusText.text = turnsLeft.ToString();
 
-        tittleText.text = effectName.ToUpper();
+        tittleText.text = effectName;   // Camel case, matching the rest of the UI
         descText.text = effectDesc;
     }
 }

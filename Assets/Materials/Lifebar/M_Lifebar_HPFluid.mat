@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: M_Lifebar_HPFluid
+  m_Shader: {fileID: 4800000, guid: 7f54ab72839ad4d41928c88b33ac50b3, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: 3000
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _SparkleTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _AlphaDrain: 1
+    - _AlphaFull: 0.976
+    - _DrainLerp: 0
+    - _EmissionBase: 1
+    - _EmissionByFill: 0
+    - _Fill: 0.62
+    - _MenWidth: 0.2
+    - _MoteAmount: 1.25
+    - _MoteSize: 0.211
+    - _MoteSpeed: 2.77
+    - _RimSoft: 0.367
+    - _RimStart: 0.473
+    - _SparkleAmount: 1.14
+    - _WaveAmp: 0.006
+    - _WaveFreq: 2
+    - _WaveSpeed: 1.3
+    m_Colors:
+    - _ColorLow: {r: 0.22, g: 0.006, b: 0.022, a: 1}
+    - _ColorMid: {r: 0.76, g: 0.035, b: 0.09, a: 1}
+    - _ColorTop: {r: 0.98, g: 0.18, b: 0.23, a: 1}
+    - _DrainColor: {r: 0.14499995, g: 0.071999975, b: 0.028, a: 1}
+    - _MenColor: {r: 0.7830189, g: 0.18098079, b: 0.39599442, a: 1}
+    - _MoteColor: {r: 0.7264151, g: 0, b: 0.075299226, a: 1}
+    - _MoteGrid: {r: 21.95, g: 4, b: 3, a: 0}
+    - _RimDark: {r: 0.3, g: 0.02, b: 0.07, a: 1}
+    - _SparkleTiling: {r: 6, g: 2, b: 0, a: 0}
+  m_BuildTextureStacks: []
