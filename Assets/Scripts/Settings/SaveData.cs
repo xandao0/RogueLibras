@@ -8,7 +8,8 @@ public class SaveData
 {
     // 2 added the enemy and the sign progression. Older files load without
     // them: a random enemy, and the signs stay however they currently are.
-    public const int CurrentVersion = 2;
+    // 3 added the direction; anything older was Portuguese to Libras.
+    public const int CurrentVersion = 3;
     public int version;
 
     public int slot;
@@ -33,6 +34,14 @@ public class SaveData
     public int signTurn;
     public int nextSignTurn;
 
+    // SignProgression.Direction, as an int so JsonUtility reads old files as 0.
+    public int signDirection;
+
+    public SignProgression.Direction Direction
+    {
+        get { return version >= 3 ? (SignProgression.Direction)signDirection : SignProgression.Direction.PortugueseToLibras; }
+    }
+
     public bool HasSignProgress { get { return version >= 2; } }
 
     public DateTime SavedAt
@@ -46,16 +55,21 @@ public class SaveData
         }
     }
 
-    public string Describe()
+    /// One line for a save slot. withDirection: false where the list is
+    /// already grouped by direction (the start menu).
+    public string Describe(bool withDirection = true)
     {
         DateTime at = SavedAt;
-        string when = at != DateTime.MinValue ? at.ToLocalTime().ToString("dd/MM/yyyy HH:mm") : savedAtUtc;
+        string when = at != DateTime.MinValue ? at.ToLocalTime().ToString(Loc.T("save.date_format")) : savedAtUtc;
 
-        string text = string.Format("{0}  •  {1} HP  •  {2} inimigos  •  {3} cartas",
+        string text = Loc.T("save.summary",
             when, currentHealth, defeatedEnemies, deckCardNames != null ? deckCardNames.Count : 0);
 
         if (HasSignProgress)
-            text += string.Format("  •  {0} sinais", learnedSigns != null ? learnedSigns.Count : 0);
+        {
+            text += "  •  " + Loc.T("save.signs", learnedSigns != null ? learnedSigns.Count : 0);
+            if (withDirection) text += "  •  " + SignProgression.Describe(Direction);
+        }
 
         return text;
     }

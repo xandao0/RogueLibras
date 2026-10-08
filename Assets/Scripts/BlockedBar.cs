@@ -5,10 +5,9 @@ using TMPro;
 // The player's block ("Bloqueio"), shown as a light bar in the style of the
 // enemy health bar: a skinned Slider, a shield icon and the value.
 //
-// The value reads as a plain white number until the player has been through a
-// few turns, then it switches to the SignWriting glyph for that number (still
-// white) - the same "learn the sign in context" idea the cards use.
-public class BlockedBar : MonoBehaviour
+// The value is a number or its SignWriting sign (still white), following the
+// same one-word-per-turn progression as the cards - see SignProgression.
+public class BlockedBar : MonoBehaviour, ISignWordSource
 {
     [SerializeField] private Slider slider;
     [SerializeField] private TMP_Text amountText;
@@ -17,14 +16,15 @@ public class BlockedBar : MonoBehaviour
              "the reference up so the fill stays proportional without overflowing.")]
     [SerializeField] private float softMax = 20f;
 
-    [Tooltip("Turns played before the number is shown as a SignWriting sign.")]
-    [SerializeField] private int signAfterTurn = 5;
+    [Tooltip("Size of the sign that replaces the number, relative to the text.")]
+    [Range(0.6f, 3f)] [SerializeField] private float signScale = 1.5f;
 
     [Tooltip("Fade the whole bar down while block is zero instead of hiding it.")]
     [Range(0f, 1f)] [SerializeField] private float emptyAlpha = 0.35f;
     [SerializeField] private float lerpSpeed = 10f;
 
     private CanvasGroup _cg;
+    private int _value;
     private float _targetFill;
     private float _targetAlpha = 1f;
 
@@ -40,6 +40,7 @@ public class BlockedBar : MonoBehaviour
         _cg.blocksRaycasts = false;
 
         if (amountText != null) amountText.color = Color.white;
+        SignText.UsePlainSigns(amountText);   // the card outline smears signs this size
     }
 
     private void AutoWire()
@@ -55,11 +56,12 @@ public class BlockedBar : MonoBehaviour
     public void SetBlock(int current)
     {
         current = Mathf.Max(0, current);
+        _value = current;
 
         if (amountText != null)
         {
             amountText.color = Color.white;
-            amountText.text = AsSignOrNumber(current);
+            amountText.text = SignText.Number(current, signScale);
         }
 
         float max = Mathf.Max(softMax, current);
@@ -67,19 +69,14 @@ public class BlockedBar : MonoBehaviour
         _targetAlpha = current > 0 ? 1f : emptyAlpha;
     }
 
-    private string AsSignOrNumber(int value)
+    public void CollectSignWords(System.Collections.Generic.List<string> into)
     {
-        if (SignProgression.Turn >= signAfterTurn && HasNumeroSign(value))
-            return "<size=150%><sprite name=\"Numero_" + value + "\" tint=1></size>";
-        return value.ToString();
+        SignText.NumberWords(_value, into);
     }
 
-    private static bool HasNumeroSign(int value)
+    public void RefreshSignText()
     {
-        var sa = TMP_Settings.defaultSpriteAsset;
-        if (sa == null) return false;
-        string name = "Numero_" + value;
-        return sa.spriteCharacterTable.Exists(c => c.name == name);
+        if (amountText != null) amountText.text = SignText.Number(_value, signScale);
     }
 
     private void Update()

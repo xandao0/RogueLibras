@@ -1,0 +1,79 @@
+Relatório de tradução - 07/10/2026 14:34
+Referência: pt-BR (133 textos)
+
+=== Libras (libras) ===
+
+Sinais que faltam (2) - crie no SignMaker e cole o FSW em dictionary.json:
+  Goblin  (enemies.Enemy_AngryGoblin.name, enemies.Enemy_PassiveGoblin.name)
+  Ogro  (enemies.Orc.name)
+
+Textos ainda sem tradução em Libras (68) - aparecem só escritos; para sinalizar, adicione a chave em glosses.json:
+  audio.sound_off  =  Mudo
+  audio.sound_on  =  Som
+  battle.block  =  Bloqueio: {0}
+  battle.discard_count  =  {0} cartas descartadas
+  battle.discard_count_one  =  1 carta descartada
+  battle.draw_count  =  {0} cartas para comprar
+  battle.draw_count_one  =  1 carta para comprar
+  battle.end_turn  =  Encerrar Turno
+  battle.energy  =  Energia: <color=#00FF00>{0}</color> / <color=#00FF00>{1}</color>
+  battle.exit  =  Sair
+  battle.options  =  Opções
+  card_parts.cure  =  Valor de cura
+  card_parts.damage  =  Valor de dano
+  card_parts.defense  =  Valor de defesa
+  card_parts.description  =  Descrição
+  card_parts.energy  =  Custo de energia
+  card_parts.name  =  Nome da carta
+  card_parts.type  =  Tipo de carta
+  direction.libras_to_pt  =  Libras para Português
+  direction.libras_to_pt_help  =  As cartas começam em Libras, com o nome em português. / A cada turno, um sinal vira palavra.
+  direction.pt_to_libras  =  Português para Libras
+  direction.pt_to_libras_help  =  As cartas começam em português. / A cada turno, uma palavra vira sinal.
+  end.choose_card  =  Escolha uma carta para adicionar ao baralho
+  end.game_over  =  Parabéns por ter derrotado 3 inimigos / 
+  end.quit  =  Sair
+  end.restart  =  Reiniciar
+  help.button  =  Ajuda
+  help.close  =  Fechar
+  help.exit_hint  =  Clique fora da carta para sair
+  help.heading_sign  =  SINAL EM LIBRAS
+  help.heading_signwriting  =  EM LIBRAS (SIGNWRITING)
+  help.heading_text  =  EM PORTUGUÊS
+  help.hide  =  Esconder
+  help.no_sign  =  Esta palavra ainda não tem sinal no jogo.
+  help.prompt  =  Selecione uma palavra ou sinal da carta
+  help.show_sign  =  Ver em Libras
+  help.translate  =  Traduzir
+  language.libras  =  Libras
+  language.portuguese  =  Português
+  menu.options  =  Opções
+  menu.play  =  Jogar
+  menu.quit  =  Sair
+  settings.close  =  Fechar
+  settings.confirm  =  Confirmar?
+  settings.delete  =  Apagar
+  settings.delete_all  =  Apagar tudo
+  settings.effects  =  Efeitos
+  settings.load  =  Carregar
+  settings.music  =  Música
+  settings.restart  =  Recomeçar
+  settings.restart_from_save  =  do último save
+  settings.restart_from_start  =  do início
+  settings.save  =  Salvar
+  settings.saves  =  Jogos salvos
+  settings.slot  =  Save {0}
+  settings.slot_empty  =  vazio
+  settings.title  =  Configurações
+  start.back  =  Voltar
+  start.choose  =  Escolha como as palavras das cartas vão mudar:
+  start.continue  =  Continuar
+  start.continue_none  =  Nenhum jogo salvo ainda.
+  start.example_word  =  Fogo
+  start.load  =  Carregar
+  start.new_game  =  Novo jogo
+  start.previous_choice  =  escolha anterior - continua de onde parou
+  start.saves  =  Jogos salvos
+  start.saves_empty  =  Nenhum jogo salvo neste modo.
+  start.title  =  Jogar
+

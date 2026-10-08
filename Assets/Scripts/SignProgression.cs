@@ -1,11 +1,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// Decides which words on the cards have turned into SignWriting yet.
+// Decides which words on the cards have turned into SignWriting yet - or, in
+// the other direction, back into Portuguese.
 //
-// Everything starts as plain Portuguese. Nothing changes for the first few
-// turns; after that, one single word graduates per turn, picked at random from
-// whatever is actually on screen. Because the pick is per *word* and not per
+// A run is played in one of two directions, picked when it starts:
+//   PortugueseToLibras - everything starts as plain Portuguese and words
+//                        graduate into SignWriting.
+//   LibrasToPortuguese - everything starts as SignWriting and words graduate
+//                        into Portuguese, for players who already sign.
+// "Graduated" means the same in both: the word has flipped to the run's target
+// language. Nothing changes for the first few turns; after that, one single
+// word graduates per turn, picked at random from whatever is actually on screen. Because the pick is per *word* and not per
 // card, a card can end up half text and half sign - its name signed while its
 // number is still a numeral - which is the whole point: the player meets one new
 // sign at a time instead of a wall of them.
@@ -21,6 +27,12 @@ public static class SignProgression
         Sign = 1    // graduated: the sign replaces it
     }
 
+    public enum Direction
+    {
+        PortugueseToLibras = 0,   // the default, and what saves older than v3 were
+        LibrasToPortuguese = 1
+    }
+
     [Tooltip("Turns played before the first word ever changes.")]
     public const int TurnsBeforeFirstSign = 3;
 
@@ -30,8 +42,10 @@ public static class SignProgression
     private const string LearnedKey = "sign.learned";
     private const string TurnKey = "sign.turn";
     private const string NextKey = "sign.next";
+    private const string DirectionKey = "sign.direction";
 
     private static HashSet<string> _learned;
+    private static int _direction = -1;
     private static int _turn = -1;
     private static int _nextSignTurn = -1;
 
@@ -61,6 +75,36 @@ public static class SignProgression
         }
     }
 
+    /// Which language the run starts in and which it moves towards.
+    public static Direction CurrentDirection
+    {
+        get
+        {
+            if (_direction < 0) _direction = PlayerPrefs.GetInt(DirectionKey, (int)Direction.PortugueseToLibras);
+            return (Direction)_direction;
+        }
+    }
+
+    /// In a Libras-to-Portuguese run each card's name is in Portuguese from the
+    /// start, so the player always knows which card they are holding while
+    /// everything else on it is still signed. Only the rest graduates.
+    public static bool CardNamesStayPortuguese
+    {
+        get { return CurrentDirection == Direction.LibrasToPortuguese; }
+    }
+
+    /// Short Portuguese label for a direction, for menus and save slots.
+    public static string Describe(Direction direction)
+    {
+        return Loc.T(DescribeKey(direction));
+    }
+
+    /// The locale key for a direction's name; "_help" after it explains it.
+    public static string DescribeKey(Direction direction)
+    {
+        return direction == Direction.LibrasToPortuguese ? "direction.libras_to_pt" : "direction.pt_to_libras";
+    }
+
     /// How many words have graduated so far.
     public static int LearnedCount { get { return Learned.Count; } }
 
@@ -84,8 +128,9 @@ public static class SignProgression
 
     /// Put the progression back to a saved point: exactly these words
     /// graduated, and the schedule where it was.
-    public static void Restore(IList<string> learnedWords, int turn, int nextSignTurn)
+    public static void Restore(IList<string> learnedWords, int turn, int nextSignTurn, Direction direction)
     {
+        SetDirection(direction);
         Learned.Clear();
         if (learnedWords != null)
             foreach (var w in learnedWords)
@@ -108,9 +153,13 @@ public static class SignProgression
         return Learned.Contains(KeyFor(word));
     }
 
+    /// What the word is drawn as right now. A word with no sign authored is
+    /// always text, whatever this says - the callers check that.
     public static Stage GetStage(string word)
     {
-        return IsLearned(word) ? Stage.Sign : Stage.Text;
+        bool graduated = IsLearned(word);
+        if (CurrentDirection == Direction.LibrasToPortuguese) graduated = !graduated;
+        return graduated ? Stage.Sign : Stage.Text;
     }
 
     /// Call at the start of every player turn, passing every word currently
@@ -171,7 +220,14 @@ public static class SignProgression
         Save();
     }
 
-    /// Back to all-text, turn zero.
+    /// A fresh run in the given direction: nothing graduated, turn zero.
+    public static void ResetAll(Direction direction)
+    {
+        SetDirection(direction);
+        ResetAll();
+    }
+
+    /// Back to the starting language, turn zero, keeping the direction.
     public static void ResetAll()
     {
         Learned.Clear();
@@ -179,6 +235,12 @@ public static class SignProgression
         _nextSignTurn = TurnsBeforeFirstSign + 1;
         PlayerPrefs.SetInt(TurnKey, 0);
         Save();
+    }
+
+    private static void SetDirection(Direction direction)
+    {
+        _direction = (int)direction;
+        PlayerPrefs.SetInt(DirectionKey, _direction);
     }
 
     private static void Save()

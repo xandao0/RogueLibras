@@ -118,6 +118,13 @@ public class CardDisplay : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
     [Header("SignWriting")]
     [Tooltip("Maps words to their SignWriting sign sprites.")]
     public SignWritingLibrary signLibrary;
+
+    // The active sign language's signs (see Loc); the reference above is only
+    // the fallback for a scene without locale settings.
+    private SignWritingLibrary Signs
+    {
+        get { var active = Loc.Signs; return active != null ? active : signLibrary; }
+    }
     [Tooltip("Renders the card's name as signs. Falls back to text when a sign is missing.")]
     public SignRow nameSignRow;
     [Tooltip("Renders the card's category (e.g. carta comum = two signs).")]
@@ -183,7 +190,7 @@ public class CardDisplay : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
             Debug.LogWarning("Card video is not assigned!");
         }
 
-        cardName = card.cardName;
+        cardName = Loc.CardName(card);   // in the active language; see Assets/Locales
         cardType = card.type;
         cardStamina = card.cardStamina;
         strength = card.strength;
@@ -202,7 +209,7 @@ public class CardDisplay : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
         // Stamina cost: numeral until its sign has been learned.
         cardStaminaText.text = StagedInlineBadge("Numero_" + cardStamina, cardStamina.ToString());
 
-        cardDesc = ProcessDescription(card.cardDescription);
+        cardDesc = ProcessDescription(Loc.CardDescription(card));
         cardDescriptionText.text = cardDesc;
 
         UpdateCardArtLayers();
@@ -215,7 +222,7 @@ public class CardDisplay : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
     // signed cards rather than flipping over all at once.
     private void ApplyStagedWord(string word, string fallbackText, TMP_Text label, SignRow row)
     {
-        Sprite[] signs = signLibrary != null ? signLibrary.Get(word) : null;
+        Sprite[] signs = Signs != null ? Signs.Get(word) : null;
         var stage = SignProgression.GetStage(word);
 
         // No sign authored for this word yet - always show the text.
@@ -240,7 +247,26 @@ public class CardDisplay : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
 
     private void ApplyNameSigns()
     {
+        if (SignProgression.CardNamesStayPortuguese)
+        {
+            if (nameSignRow != null) nameSignRow.Clear();
+            if (cardNameText != null) { cardNameText.text = cardName; cardNameText.alpha = 1f; }
+            return;
+        }
         ApplyStagedWord(cardName, cardName, cardNameText, nameSignRow);
+    }
+
+    private string CategoryKey()
+    {
+        return card != null && card.cardCategory == CardCategories.COMBINACAO ? "categories.combination" : "categories.common";
+    }
+
+    private string CategoryText() { return Loc.T(CategoryKey()); }
+
+    // The dictionary entry the category is signed with (Carta_Comum is two signs).
+    private string CategorySignWord()
+    {
+        return Loc.Gloss(CategoryKey()) ?? CategoryText();
     }
 
     // A category can span several signs - "carta comum" is two - so this always
@@ -248,8 +274,8 @@ public class CardDisplay : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
     private void ApplyCategorySigns()
     {
         bool combo = card != null && card.cardCategory == CardCategories.COMBINACAO;
-        string word = combo ? "combinacao" : "carta_comum";
-        string text = combo ? "Combinação" : "Carta Comum";
+        string word = CategorySignWord();
+        string text = CategoryText();
         ApplyStagedWord(word, text, cardTypeText, categorySignRow);
     }
 
@@ -319,9 +345,9 @@ public class CardDisplay : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
         if (actionBadges == null) return;
 
         int slot = 0;
-        if (strength > 0) slot = ShowBadge(slot, attackBadge, Color.white, strength, "Valor de dano");
-        if (defense > 0) slot = ShowBadge(slot, defenseBadge, Color.white, defense, "Valor de defesa");
-        if (cure > 0) slot = ShowBadge(slot, cureBadge != null ? cureBadge : defenseBadge, Color.white, cure, "Valor de cura");
+        if (strength > 0) slot = ShowBadge(slot, attackBadge, Color.white, strength, Loc.T("card_parts.damage"));
+        if (defense > 0) slot = ShowBadge(slot, defenseBadge, Color.white, defense, Loc.T("card_parts.defense"));
+        if (cure > 0) slot = ShowBadge(slot, cureBadge != null ? cureBadge : defenseBadge, Color.white, cure, Loc.T("card_parts.cure"));
 
         for (int i = slot; i < actionBadges.Length; i++)
             if (actionBadges[i] != null) actionBadges[i].gameObject.SetActive(false);
@@ -401,7 +427,7 @@ public class CardDisplay : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
         ApplyCategorySigns();
         cardStaminaText.text = StagedInlineBadge("Numero_" + cardStamina, cardStamina.ToString());
         UpdateActionBadges();   // their numbers graduate too
-        cardDesc = ProcessDescription(card.cardDescription);
+        cardDesc = ProcessDescription(Loc.CardDescription(card));
         cardDescriptionText.text = cardDesc;
     }
 
@@ -450,12 +476,10 @@ public class CardDisplay : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
         if (card == null || into == null) return;
 
         // Name and category: the sign row while learned, the written word before.
-        string categoryWord = card.cardCategory == CardCategories.COMBINACAO ? "combinacao" : "carta_comum";
-        string categoryText = card.cardCategory == CardCategories.COMBINACAO ? "Combinação" : "Carta Comum";
-        AddRowOrText(into, nameSignRow, cardNameText, cardName, cardName, "Nome da carta");
-        AddRowOrText(into, categorySignRow, cardTypeText, categoryWord, categoryText, "Tipo de carta");
+        AddRowOrText(into, nameSignRow, cardNameText, cardName, cardName, Loc.T("card_parts.name"));
+        AddRowOrText(into, categorySignRow, cardTypeText, CategorySignWord(), CategoryText(), Loc.T("card_parts.type"));
 
-        AddNumber(into, cardStaminaText, cardStamina, "Custo de energia");
+        AddNumber(into, cardStaminaText, cardStamina, Loc.T("card_parts.energy"));
 
         if (actionBadges != null)
         {
@@ -497,7 +521,7 @@ public class CardDisplay : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
         into.Add(new WordSpot
         {
             key = key,
-            portuguese = isSign ? SignWritingLibrary.ToPortuguese(key) : value.ToString(),
+            portuguese = isSign ? Loc.WordForSign(key) : value.ToString(),
             role = role,
             isSign = isSign,
             bottomLeft = rt.TransformPoint(r.min),
@@ -523,18 +547,23 @@ public class CardDisplay : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
             if (ci.elementType != TMP_TextElementType.Sprite) continue;
 
             string key = SpriteName(ci);
-            string written = signOrdinal < _descSignWords.Count ? _descSignWords[signOrdinal] : null;
+            string written = null;
+            if (signOrdinal < _descSigns.Count)
+            {
+                written = _descSigns[signOrdinal].written;
+                key = _descSigns[signOrdinal].key;   // "carta_comum", not its part "Carta_Comum_1"
+            }
             signOrdinal++;
             if (string.IsNullOrEmpty(key) || !ci.isVisible) continue;
 
-            bool isNumber = key.StartsWith("Numero_");
+            bool isNumber = SignWritingLibrary.Normalize(key).StartsWith("numero_");
             into.Add(new WordSpot
             {
                 key = key,
                 portuguese = isNumber || string.IsNullOrEmpty(written)
-                    ? SignWritingLibrary.ToPortuguese(key)
+                    ? Loc.WordForSign(key)
                     : Capitalize(written),
-                role = "Descrição",
+                role = Loc.T("card_parts.description"),
                 isSign = true,
                 bottomLeft = t.TransformPoint(ci.bottomLeft),
                 topRight = t.TransformPoint(ci.topRight)
@@ -556,7 +585,7 @@ public class CardDisplay : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
             {
                 key = SignKeyForWord(word),
                 portuguese = word,
-                role = "Descrição",
+                role = Loc.T("card_parts.description"),
                 isSign = false,
                 bottomLeft = t.TransformPoint(new Vector3(first.bottomLeft.x, line.descender, 0f)),
                 topRight = t.TransformPoint(new Vector3(last.topRight.x, line.ascender, 0f))
@@ -564,19 +593,16 @@ public class CardDisplay : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
         }
     }
 
-    /// The SignWriting word for a word written in a description: the same
-    /// vocabulary ProcessDescription swaps for signs, numerals as Numero_N,
-    /// and anything else as itself (which may or may not have a sign).
-    public static string SignKeyForWord(string word)
+    /// The SignWriting word for a word written in a description: numerals as
+    /// Numero_N, a word with a sign (or a synonym of one, ataque -> Dano) as
+    /// that sign's key, and anything else as itself, which has no sign.
+    public string SignKeyForWord(string word)
     {
         if (string.IsNullOrEmpty(word)) return word;
-        string w = word.ToUpper();
-        if (w == "DANO" || w == "ATAQUE" || w == "ATACA") return "Dano";
-        if (w == "CURA" || w == "CURAR" || w == "CURAM") return "Curar";
-        if (w == "DEFESA" || w == "DEFENDE" || w == "DEFENDER" || w == "BLOQUEIO") return "Defesa";
         int n;
         if (int.TryParse(word, out n)) return "Numero_" + n;
-        return word;
+        string key = Signs != null ? Signs.Resolve(word) : null;
+        return key ?? word;
     }
 
     private static string SpriteName(TMP_CharacterInfo ci)
@@ -646,48 +672,87 @@ public class CardDisplay : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
     {
         if (card == null || into == null) return;
 
-        AddWord(into, cardName);
-        AddWord(into, card.cardCategory == CardCategories.COMBINACAO ? "combinacao" : "carta_comum");
+        // A name already in Portuguese has nothing left to graduate.
+        if (!SignProgression.CardNamesStayPortuguese) AddWord(into, cardName);
+        AddWord(into, CategorySignWord());
         AddWord(into, "Numero_" + cardStamina);
 
-        if (string.IsNullOrEmpty(card.cardDescription)) return;
+        string description = Loc.CardDescription(card);
+        if (string.IsNullOrEmpty(description)) return;
 
-        foreach (var raw in card.cardDescription.Split(' '))
+        foreach (var raw in description.Split(' '))
         {
-            string w = raw.ToUpper();
-            if (w == "DANO" || w == "ATAQUE" || w == "ATACA") AddWord(into, "Dano");
-            else if (w == "CURA" || w == "CURAR" || w == "CURAM") AddWord(into, "Curar");
-            else if (w == "DEFESA" || w == "DEFENDE" || w == "DEFENDER" || w == "BLOQUEIO") AddWord(into, "Defesa");
-            else if (card.type == CardTypes.ATAQUE && w == "S") AddWord(into, "Numero_" + strength);
-            else if (card.type == CardTypes.DEFESA && w == "D") AddWord(into, "Numero_" + defense);
-            else if ((card.type == CardTypes.DEFESA || card.type == CardTypes.ITEM) && w == "C") AddWord(into, "Numero_" + cure);
-            else if (card.type == CardTypes.ITEM && w == "D") AddWord(into, "Numero_" + defense);
-            else if (card.type == CardTypes.BOOST && w == "X") AddWord(into, "Numero_" + cardDraw);
+            string written;
+            AddWord(into, DescriptionWordKey(raw, out written));
         }
     }
 
     private void AddWord(List<string> into, string word)
     {
         if (string.IsNullOrEmpty(word)) return;
-        if (signLibrary == null || !signLibrary.Has(word)) return;   // no sign authored, nothing to learn
+        if (Signs == null || !Signs.Has(word)) return;   // no sign authored, nothing to learn
         if (!into.Contains(word)) into.Add(word);
     }
 
-    // Renders one word at whatever stage the player has reached with it:
-    // plain text at first, word + sign while learning, then the sign alone.
-    private string StagedInline(string signWord, string plainText)
+    // One word of a card description as the player reads it, and the sign
+    // behind it. The placeholder letters become the card's own numbers (S is
+    // the damage, D the defence, C the cure, X the cards drawn); every other
+    // word is looked up in the library, synonyms included, so any word that has
+    // a sign gets translated. Null when the word has no sign.
+    private string DescriptionWordKey(string raw, out string written)
     {
-        bool hasSign = signLibrary != null && signLibrary.Has(signWord);
-        if (!hasSign) return plainText;
+        written = raw;
+        if (string.IsNullOrEmpty(raw)) return null;
+
+        string w = raw.ToUpper();
+        int value = -1;
+        if (card.type == CardTypes.ATAQUE && w == "S") value = strength;
+        else if (card.type == CardTypes.DEFESA && w == "D") value = defense;
+        else if ((card.type == CardTypes.DEFESA || card.type == CardTypes.ITEM) && w == "C") value = cure;
+        else if (card.type == CardTypes.ITEM && w == "D") value = defense;
+        else if (card.type == CardTypes.BOOST && w == "X") value = cardDraw;
+
+        if (value >= 0)
+        {
+            written = value.ToString();
+            return "Numero_" + value;
+        }
+
+        if (int.TryParse(raw, out value)) return "Numero_" + value;
+        return Signs != null ? Signs.Resolve(raw) : null;
+    }
+
+    // Renders one word at whatever stage the player has reached with it: the
+    // written word or its sign(s). spriteCount says how many signs it drew.
+    private string StagedInline(string signWord, string plainText, out int spriteCount)
+    {
+        spriteCount = 0;
+        string[] names = Signs != null ? Signs.SpriteNames(signWord) : null;
+        if (names == null || names.Length == 0 || !InlineSpritesExist(names)) return plainText;
+        if (SignProgression.GetStage(signWord) != SignProgression.Stage.Sign) return plainText;
 
         // The TMP atlas is a white mask, unlike the standalone sign sprites which
         // are authored in colour - so inline sprites need tint=1 to pick up the
         // surrounding text colour, or they render white. Inline sprites render at
         // the font size, and SignWriting glyphs are dense enough that at
         // description size they collapse into a smudge -- hence the size bump.
-        return SignProgression.GetStage(signWord) == SignProgression.Stage.Sign
-            ? "<size=" + Mathf.RoundToInt(inlineSignScale * 100f) + "%><sprite name=\"" + signWord + "\" tint=1></size>"
-            : plainText;
+        var sb = new System.Text.StringBuilder();
+        sb.Append("<size=").Append(Mathf.RoundToInt(inlineSignScale * 100f)).Append("%>");
+        foreach (var n in names) sb.Append("<sprite name=\"").Append(n).Append("\" tint=1>");
+        sb.Append("</size>");
+        spriteCount = names.Length;
+        return sb.ToString();
+    }
+
+    // A sign added since the TMP sprite asset was last rebuilt has a sprite
+    // but no inline glyph; it stays written out rather than drawing a blank.
+    private static bool InlineSpritesExist(string[] names)
+    {
+        var sa = TMP_Settings.defaultSpriteAsset;
+        if (sa == null) return false;
+        foreach (var n in names)
+            if (sa.GetSpriteIndexFromName(n) < 0) return false;
+        return true;
     }
 
     // Same staging, but sized so the sign fits a small badge no matter how wide
@@ -699,7 +764,7 @@ public class CardDisplay : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
 
     private string StagedInlineBadge(string signWord, string plainText)
     {
-        bool hasSign = signLibrary != null && signLibrary.Has(signWord);
+        bool hasSign = Signs != null && Signs.Has(signWord) && InlineSpritesExist(new[] { signWord });
         if (!hasSign || SignProgression.GetStage(signWord) != SignProgression.Stage.Sign)
             return plainText;
 
@@ -719,71 +784,33 @@ public class CardDisplay : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
     }
 
     // What each inline sign in the description replaced, in order, so the help
-    // can say the exact word the sentence used ("dano", not "Dano").
-    private readonly List<string> _descSignWords = new List<string>();
+    // can say the exact word the sentence used ("dano", not "Dano") and look up
+    // the whole word even when it is drawn as several signs.
+    private struct DescSign { public string written; public string key; }
+    private readonly List<DescSign> _descSigns = new List<DescSign>();
 
     private string ProcessDescription(string originalDesc)
     {
-        _descSignWords.Clear();
+        _descSigns.Clear();
         if (string.IsNullOrEmpty(originalDesc)) return "";
 
         string[] temp = originalDesc.Split(' ');
-        string newCardDesc = "";
+        var sb = new System.Text.StringBuilder();
 
         for (int i = 0; i < temp.Length; i++)
         {
-            string word = temp[i].ToUpper();
-            string written = temp[i];   // how it reads as plain text
+            string written;
+            string key = DescriptionWordKey(temp[i], out written);
 
-            // Dynamic numbers: the placeholder letter is swapped for the value,
-            // as a numeral until its sign has been learned.
-            if (card.type == CardTypes.ATAQUE && word == "S")
-            {
-                written = strength.ToString();
-                temp[i] = StagedInline("Numero_" + strength, written);
-            }
-            else if (card.type == CardTypes.DEFESA && word == "D")
-            {
-                written = defense.ToString();
-                temp[i] = StagedInline("Numero_" + defense, written);
-            }
-            else if ((card.type == CardTypes.DEFESA || card.type == CardTypes.ITEM) && word == "C")
-            {
-                written = cure.ToString();
-                temp[i] = StagedInline("Numero_" + cure, written);
-            }
-            else if (card.type == CardTypes.ITEM && word == "D")
-            {
-                written = defense.ToString();
-                temp[i] = StagedInline("Numero_" + defense, written);
-            }
-            else if (card.type == CardTypes.BOOST && word == "X")
-            {
-                written = cardDraw.ToString();
-                temp[i] = StagedInline("Numero_" + cardDraw, written);
-            }
+            int sprites = 0;
+            string shown = key != null ? StagedInline(key, written, out sprites) : written;
+            for (int k = 0; k < sprites; k++) _descSigns.Add(new DescSign { written = written, key = key });
 
-            // Vocabulary words graduate to their sign the same way.
-            if (word == "DANO" || word == "ATAQUE" || word == "ATACA")
-            {
-                temp[i] = StagedInline("Dano", temp[i]);
-            }
-            else if (word == "CURA" || word == "CURAR" || word == "CURAM")
-            {
-                temp[i] = StagedInline("Curar", temp[i]);
-            }
-            else if (word == "DEFESA" || word == "DEFENDE" || word == "DEFENDER" || word == "BLOQUEIO")
-            {
-                temp[i] = StagedInline("Defesa", temp[i]);
-            }
-
-            if (temp[i].Contains("<sprite")) _descSignWords.Add(written);
-
-            newCardDesc += temp[i];
-            if (i < temp.Length - 1) newCardDesc += " ";
+            sb.Append(shown);
+            if (i < temp.Length - 1) sb.Append(' ');
         }
 
-        return newCardDesc;
+        return sb.ToString();
     }
 
     public void OnPointerClick(PointerEventData eventData)

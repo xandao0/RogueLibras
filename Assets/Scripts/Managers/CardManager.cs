@@ -152,8 +152,12 @@ public class CardManager : MonoBehaviour
 
     public void UpdateDisplay()
     {
-        drawPileText.text = drawContainer.childCount.ToString();
-        discardPileText.text = discardContainer.childCount.ToString();
+        // The pile counts are numbers or signs, like every other number - the
+        // plain signs, as the card outline smears them at this size.
+        SignText.UsePlainSigns(drawPileText);
+        SignText.UsePlainSigns(discardPileText);
+        drawPileText.text = SignText.Number(drawContainer.childCount, pileSignScale);
+        discardPileText.text = SignText.Number(discardContainer.childCount, pileSignScale);
 
         //defensive: don't hold onto a selection for a card that left the hand
         if (selectedCard != null && selectedCard.transform.parent != cardHolderContainer)
@@ -322,8 +326,10 @@ public class CardManager : MonoBehaviour
 
     private readonly List<string> _signWordPool = new List<string>();
 
-    // One word per turn turns into SignWriting, drawn at random from everything
-    // readable in the current hand. Nothing happens for the first few turns.
+    // One word per turn turns into SignWriting (or back into Portuguese), drawn
+    // at random from everything readable in the current hand and on the HUD -
+    // the pile counts, the block, the enemy's name and numbers. Nothing happens
+    // for the first few turns.
     private void AdvanceSignProgression()
     {
         _signWordPool.Clear();
@@ -333,8 +339,16 @@ public class CardManager : MonoBehaviour
             if (c != null) c.CollectSignWords(_signWordPool);
         }
 
+        SignText.NumberWords(drawContainer.childCount, _signWordPool);
+        SignText.NumberWords(discardContainer.childCount, _signWordPool);
+        List<ISignWordSource> hud = HudSignSources();
+        foreach (var source in hud) source.CollectSignWords(_signWordPool);
+
         string learned = SignProgression.OnTurnStarted(_signWordPool);
         if (string.IsNullOrEmpty(learned)) return;
+
+        UpdateDisplay();
+        foreach (var source in hud) source.RefreshSignText();
 
         // Cards in hand that carry the word change under a shine the player can
         // watch - after the new hand has fanned out, one card after another. The
@@ -362,10 +376,27 @@ public class CardManager : MonoBehaviour
     [Tooltip("Extra delay per card when several cards in hand show the new sign.")]
     [SerializeField] private float signRevealStagger = 0.12f;
 
-    /// Redraws the wording on every card in the battle - after the sign
-    /// progression changes underneath them.
+    [Tooltip("Size of the signs that replace the pile counts, relative to the text.")]
+    [Range(0.6f, 3f)] [SerializeField] private float pileSignScale = 1.3f;
+
+    private static List<ISignWordSource> HudSignSources()
+    {
+        var list = new List<ISignWordSource>();
+        foreach (var mb in FindObjectsOfType<MonoBehaviour>())
+        {
+            var source = mb as ISignWordSource;
+            if (source != null) list.Add(source);
+        }
+        return list;
+    }
+
+    /// Redraws the wording on every card in the battle, and on the HUD - after
+    /// the sign progression changes underneath them.
     public void RefreshAllCardText()
     {
+        UpdateDisplay();
+        foreach (var source in HudSignSources()) source.RefreshSignText();
+
         foreach (Transform container in new Transform[] { cardHolderContainer, drawContainer, discardContainer })
         {
             if (container == null) continue;

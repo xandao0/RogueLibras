@@ -140,6 +140,7 @@ public static class SaveSystem
         data.learnedSigns = SignProgression.LearnedWords();
         data.signTurn = SignProgression.Turn;
         data.nextSignTurn = SignProgression.NextSignTurn;
+        data.signDirection = (int)SignProgression.CurrentDirection;
 
         return data;
     }
@@ -177,18 +178,25 @@ public static class SaveSystem
         }
 
         if (data.HasSignProgress)
-            SignProgression.Restore(data.learnedSigns, data.signTurn, data.nextSignTurn);
+            SignProgression.Restore(data.learnedSigns, data.signTurn, data.nextSignTurn, data.Direction);
 
         _pending = data;
         LoadBattle(battleSceneBuildIndex);
     }
 
     /// A run from the very beginning: full health, starting deck, and every
-    /// word back to plain Portuguese.
+    /// word back in the language the run starts in. Keeps the direction the
+    /// last run was played in.
     public static void StartNewRun(int battleSceneBuildIndex)
     {
+        StartNewRun(battleSceneBuildIndex, SignProgression.CurrentDirection);
+    }
+
+    /// A run from the very beginning, in the direction the player picked.
+    public static void StartNewRun(int battleSceneBuildIndex, SignProgression.Direction direction)
+    {
         _pending = null;
-        SignProgression.ResetAll();
+        SignProgression.ResetAll(direction);
         LoadBattle(battleSceneBuildIndex);
     }
 

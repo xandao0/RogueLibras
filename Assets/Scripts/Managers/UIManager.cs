@@ -42,13 +42,13 @@ public class UIManager : MonoBehaviour
             CombatManager.instance.maxHealth);
 
       if (blockedText != null)
-         blockedText.text = string.Format("Bloqueio: {0}", CombatManager.instance.currentBlock);
+         blockedText.text = Loc.T("battle.block", CombatManager.instance.currentBlock);
 
       if (blockedBar != null)
          blockedBar.SetBlock(CombatManager.instance.currentBlock);
 
       if (staminaText != null)
-         staminaText.text = string.Format("Energia: <color=#00FF00>{0}</color> / <color=#00FF00>{1}</color>",
+         staminaText.text = Loc.T("battle.energy",
             CardManager.instance.currentStamina, CardManager.instance.staminaAtStart);
 
       if (lifebar != null)

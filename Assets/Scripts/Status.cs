@@ -28,9 +28,9 @@ public class Status : MonoBehaviour
 
     private void LoadTrinketInfoFromData()
     {
-        effectName = effectData.effectName;
+        effectName = Loc.EffectName(effectData);
         effectSprite = effectData.effectSprite;
-        effectDesc = effectData.effectDesc;
+        effectDesc = Loc.EffectDescription(effectData);
         effectType = effectData.effectType;
         effectStrength = effectData.effectStrength;
 

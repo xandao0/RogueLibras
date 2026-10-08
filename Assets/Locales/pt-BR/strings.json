@@ -1,0 +1,165 @@
+{
+  "_meta": {
+    "id": "pt-BR",
+    "name": "Português (Brasil)",
+    "kind": "text"
+  },
+
+  "menu": {
+    "play": "Jogar",
+    "options": "Opções",
+    "quit": "Sair"
+  },
+
+  "start": {
+    "title": "Jogar",
+    "continue": "Continuar",
+    "continue_none": "Nenhum jogo salvo ainda.",
+    "saves": "Jogos salvos",
+    "saves_empty": "Nenhum jogo salvo neste modo.",
+    "load": "Carregar",
+    "new_game": "Novo jogo",
+    "back": "Voltar",
+    "choose": "Escolha como as palavras das cartas vão mudar:",
+    "previous_choice": "escolha anterior - continua de onde parou",
+    "example_word": "Fogo"
+  },
+
+  "language": {
+    "portuguese": "Português",
+    "libras": "Libras"
+  },
+
+  "direction": {
+    "pt_to_libras": "Português para Libras",
+    "libras_to_pt": "Libras para Português",
+    "pt_to_libras_help": "As cartas começam em português.\nA cada turno, uma palavra vira sinal.",
+    "libras_to_pt_help": "As cartas começam em Libras, com o nome em português.\nA cada turno, um sinal vira palavra."
+  },
+
+  "audio": {
+    "sound_on": "Som",
+    "sound_off": "Mudo"
+  },
+
+  "settings": {
+    "title": "Configurações",
+    "music": "Música",
+    "effects": "Efeitos",
+    "saves": "Jogos salvos",
+    "save": "Salvar",
+    "load": "Carregar",
+    "delete": "Apagar",
+    "delete_all": "Apagar tudo",
+    "confirm": "Confirmar?",
+    "close": "Fechar",
+    "restart": "Recomeçar",
+    "restart_from_save": "do último save",
+    "restart_from_start": "do início",
+    "slot": "Save {0}",
+    "slot_empty": "vazio"
+  },
+
+  "save": {
+    "date_format": "dd/MM/yyyy HH:mm",
+    "summary": "{0}  •  {1} HP  •  {2} inimigos  •  {3} cartas",
+    "signs": "{0} sinais"
+  },
+
+  "battle": {
+    "options": "Opções",
+    "exit": "Sair",
+    "end_turn": "Encerrar Turno",
+    "life": "Vida:",
+    "block": "Bloqueio: {0}",
+    "energy": "Energia: <color=#00FF00>{0}</color> / <color=#00FF00>{1}</color>",
+    "draw_pile": "Compra",
+    "draw_count": "{0} cartas para comprar",
+    "draw_count_one": "1 carta para comprar",
+    "discard_pile": "Descarte",
+    "discard_count": "{0} cartas descartadas",
+    "discard_count_one": "1 carta descartada"
+  },
+
+  "end": {
+    "choose_card": "Escolha uma carta para adicionar ao baralho",
+    "game_over": "Parabéns por ter derrotado 3 inimigos\n",
+    "restart": "Reiniciar",
+    "quit": "Sair"
+  },
+
+  "help": {
+    "button": "Ajuda",
+    "prompt": "Selecione uma palavra ou sinal da carta",
+    "exit_hint": "Clique fora da carta para sair",
+    "no_sign": "Esta palavra ainda não tem sinal no jogo.",
+    "heading_sign": "SINAL EM LIBRAS",
+    "heading_text": "EM PORTUGUÊS",
+    "heading_signwriting": "EM LIBRAS (SIGNWRITING)",
+    "translate": "Traduzir",
+    "show_sign": "Ver em Libras",
+    "hide": "Esconder",
+    "close": "Fechar"
+  },
+
+  "card_parts": {
+    "name": "Nome da carta",
+    "type": "Tipo de carta",
+    "energy": "Custo de energia",
+    "damage": "Valor de dano",
+    "defense": "Valor de defesa",
+    "cure": "Valor de cura",
+    "description": "Descrição"
+  },
+
+  "categories": {
+    "common": "Carta Comum",
+    "combination": "Combinação"
+  },
+
+  "numbers": {
+    "0": "zero", "1": "um", "2": "dois", "3": "três", "4": "quatro", "5": "cinco",
+    "6": "seis", "7": "sete", "8": "oito", "9": "nove", "10": "dez",
+    "format": "{0} ({1})"
+  },
+
+  "words": {
+    "agua": "Água",
+    "maca": "Maçã",
+    "furacao": "Furacão",
+    "pao": "Pão",
+    "combinacao": "Combinação",
+    "carta_comum": "Carta Comum",
+    "encerrar_turno": "Encerrar Turno",
+    "opcoes": "Opções",
+    "portugues": "Português",
+    "musica": "Música",
+    "configuracoes": "Configurações"
+  },
+
+  "cards": {
+    "Agua": { "name": "Água", "description": "Defende D e cura C" },
+    "Escudo": { "name": "Escudo", "description": "Defende D" },
+    "Faca": { "name": "Faca", "description": "Causa S de dano" },
+    "Fogo": { "name": "Fogo", "description": "Causa S de dano" },
+    "Furacao": { "name": "Furacão", "description": "Causa S de dano e compra 2 cartas" },
+    "Gelo": { "name": "Gelo", "description": "Causa S de dano" },
+    "Maça": { "name": "Maçã", "description": "Cura C de vida" },
+    "Pao": { "name": "Pão", "description": "Cura C de vida" },
+    "Raio": { "name": "Raio", "description": "Causa S de dano" },
+    "Tempestade": { "name": "Tempestade", "description": "Defende D e compra 1 carta" }
+  },
+
+  "enemies": {
+    "Enemy_AngryGoblin": { "name": "Goblin" },
+    "Enemy_PassiveGoblin": { "name": "Goblin" },
+    "Orc": { "name": "Ogro" }
+  },
+
+  "effects": {
+    "Effect_Frail": { "name": "Frágil", "description": "Ganha 25% menos bloqueio das cartas" },
+    "Effect_Might": { "name": "Força", "description": "Cartas de ataque causam 1 de dano a mais" },
+    "Effect_Vulnerable": { "name": "Vulnerável", "description": "Recebe 50% mais dano" },
+    "Effect_Weak": { "name": "Fraco", "description": "Cartas de ataque causam 25% menos dano" }
+  }
+}

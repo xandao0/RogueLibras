@@ -7,7 +7,15 @@ using UnityEngine;
 // sprites. A single word migt need a combinations of signs - "carta comum"
 // has two - so every entry holds an ordered array.
 //
-// Rebuild the table from the SVGs in Assets/SignWriting via the asset's
+// One library per sign language. It sits in that language's locale folder,
+// Assets/Locales/<id>/, next to its dictionary.json and its signs/ folder of
+// SVGs, and LocaleSettings points at it (Loc.Signs is the active one).
+//
+// Words that share a sign (ataque, ataca -> Dano) are synonyms: the defaults
+// below, plus the "sinonimos" in the dictionary.
+//
+// Rebuild the table from the SVGs with RogueLibras > SignWriting > Atualizar
+// sinais (or the asset's context menu).
 [CreateAssetMenu(fileName = "SignWritingLibrary", menuName = "RogueLibras/SignWriting Library")]
 public class SignWritingLibrary : ScriptableObject
 {
@@ -19,11 +27,38 @@ public class SignWritingLibrary : ScriptableObject
 
         [Tooltip("The signs that spell this word, in reading order.")]
         public Sprite[] signs;
+
+        [Tooltip("The same signs' names in the TMP sprite asset, for drawing " +
+                 "them inline in a description (e.g. Carta_Comum_1, Carta_Comum_2).")]
+        public string[] spriteNames;
+    }
+
+    [System.Serializable]
+    public class Alias
+    {
+        [Tooltip("A word as it is written, e.g. \"ataque\".")]
+        public string word;
+        [Tooltip("The word whose sign it uses, e.g. \"Dano\".")]
+        public string key;
     }
 
     [SerializeField] private List<Entry> entries = new List<Entry>();
 
+    [Tooltip("Words that are signed with another word's sign.")]
+    [SerializeField] private List<Alias> aliases = new List<Alias>();
+
+    // Always there, so descriptions keep working on a library that has not
+    // been rebuilt since the synonyms moved into the dictionary file.
+    private static readonly string[,] DefaultAliases =
+    {
+        { "ataque", "dano" }, { "ataca", "dano" },
+        { "cura", "curar" }, { "curam", "curar" },
+        { "defende", "defesa" }, { "defender", "defesa" },
+    };
+
     private Dictionary<string, Sprite[]> _lookup;
+    private Dictionary<string, string[]> _spriteNames;
+    private Dictionary<string, string> _aliases;
 
     // Lowercase, strip diacritics (Maçã -> maca), collapse separators to '_'.
     public static string Normalize(string raw)
@@ -44,70 +79,87 @@ public class SignWritingLibrary : ScriptableObject
     private void BuildLookup()
     {
         _lookup = new Dictionary<string, Sprite[]>();
+        _spriteNames = new Dictionary<string, string[]>();
         foreach (var e in entries)
         {
             if (e == null || string.IsNullOrEmpty(e.key) || e.signs == null || e.signs.Length == 0) continue;
             _lookup[e.key] = e.signs;
+            if (e.spriteNames != null && e.spriteNames.Length == e.signs.Length) _spriteNames[e.key] = e.spriteNames;
         }
+
+        _aliases = new Dictionary<string, string>();
+        for (int i = 0; i < DefaultAliases.GetLength(0); i++)
+            _aliases[DefaultAliases[i, 0]] = DefaultAliases[i, 1];
+        foreach (var a in aliases)
+            if (a != null && !string.IsNullOrEmpty(a.word) && !string.IsNullOrEmpty(a.key))
+                _aliases[Normalize(a.word)] = Normalize(a.key);
+    }
+
+    /// The key of the sign a word is written with - itself, or the word it is
+    /// a synonym of - or null when there is no sign for it.
+    public string Resolve(string word)
+    {
+        if (_lookup == null) BuildLookup();
+        string key = Normalize(word);
+        if (string.IsNullOrEmpty(key)) return null;
+        if (_lookup.ContainsKey(key)) return key;
+
+        string target;
+        if (_aliases.TryGetValue(key, out target) && _lookup.ContainsKey(target)) return target;
+        return null;
     }
 
     /// Returns the signs for a word, or null when the word has no sign yet.
     public Sprite[] Get(string word)
     {
-        if (_lookup == null) BuildLookup();
-        string key = Normalize(word);
-        if (string.IsNullOrEmpty(key)) return null;
-        Sprite[] signs;
-        return _lookup.TryGetValue(key, out signs) ? signs : null;
+        string key = Resolve(word);
+        return key != null ? _lookup[key] : null;
     }
 
-    public bool Has(string word) { return Get(word) != null; }
+    public bool Has(string word) { return Resolve(word) != null; }
 
-    // How a sign reads in Portuguese, for keys that lost their accents or
-    // spacing on the way in ("maca" is Maçã). Anything not listed reads as its
-    // key with the underscores turned back into spaces.
-    private static readonly Dictionary<string, string> PortugueseNames = new Dictionary<string, string>
+    /// The word's signs by their names in the TMP sprite asset, in reading
+    /// order. Falls back to the sprites' own names, which match the SVG files.
+    public string[] SpriteNames(string word)
     {
-        { "agua", "Água" },
-        { "maca", "Maçã" },
-        { "furacao", "Furacão" },
-        { "pao", "Pão" },
-        { "combinacao", "Combinação" },
-        { "carta_comum", "Carta Comum" },
-        { "encerrar_turno", "Encerrar Turno" },
-    };
+        string key = Resolve(word);
+        if (key == null) return null;
 
-    private static readonly string[] NumberNames =
-        { "zero", "um", "dois", "três", "quatro", "cinco", "seis", "sete", "oito", "nove", "dez" };
+        string[] names;
+        if (_spriteNames.TryGetValue(key, out names)) return names;
 
-    /// The Portuguese for a sign's word: "maca" -> "Maçã", "Numero_3" -> "3 (três)".
-    public static string ToPortuguese(string word)
-    {
-        string key = Normalize(word);
-        if (string.IsNullOrEmpty(key)) return string.Empty;
-
-        string named;
-        if (PortugueseNames.TryGetValue(key, out named)) return named;
-
-        const string numberPrefix = "numero_";
-        int n;
-        if (key.StartsWith(numberPrefix) && int.TryParse(key.Substring(numberPrefix.Length), out n))
-            return n >= 0 && n < NumberNames.Length ? n + " (" + NumberNames[n] + ")" : n.ToString();
-
-        string[] parts = key.Split('_');
-        for (int i = 0; i < parts.Length; i++)
-            if (parts[i].Length > 0) parts[i] = char.ToUpperInvariant(parts[i][0]) + parts[i].Substring(1);
-        return string.Join(" ", parts);
+        Sprite[] signs = _lookup[key];
+        names = new string[signs.Length];
+        for (int i = 0; i < signs.Length; i++) names[i] = signs[i] != null ? signs[i].name : key;
+        return names;
     }
 
 #if UNITY_EDITOR
-    [ContextMenu("Rebuild From SignWriting Folder")]
-    private void RebuildFromFolder()
+    /// This sign language's locale folder: the folder the library sits in.
+    public string LocaleFolder
     {
-        const string root = "Assets/SignWriting";
+        get { return System.IO.Path.GetDirectoryName(UnityEditor.AssetDatabase.GetAssetPath(this)).Replace('\\', '/'); }
+    }
+
+    /// Where its sign SVGs live, one subfolder per category.
+    public string SignFolder { get { return LocaleFolder + "/signs"; } }
+
+    /// FSW codes, synonyms and words left unsigned - the Node script's input.
+    public string DictionaryPath { get { return LocaleFolder + "/dictionary.json"; } }
+
+    [ContextMenu("Rebuild From SignWriting Folder")]
+    private void RebuildFromFolderMenu()
+    {
+        RebuildFromFolder();
+    }
+
+    /// Rebuilds the table from every SVG under the signs folder, and the
+    /// synonyms from the dictionary file. Returns how many words it found.
+    public int RebuildFromFolder()
+    {
         var grouped = new Dictionary<string, SortedList<int, Sprite>>();
 
-        foreach (var guid in UnityEditor.AssetDatabase.FindAssets("t:Sprite", new[] { root }))
+        foreach (var guid in UnityEditor.AssetDatabase.FindAssets("t:Sprite", new[] { SignFolder }))
         {
             string path = UnityEditor.AssetDatabase.GUIDToAssetPath(guid);
             if (!path.EndsWith(".svg")) continue;
@@ -143,13 +195,37 @@ public class SignWritingLibrary : ScriptableObject
         foreach (var kv in grouped)
         {
             var list = new List<Sprite>(kv.Value.Values);
-            entries.Add(new Entry { key = kv.Key, signs = list.ToArray() });
+            var names = new string[list.Count];
+            for (int i = 0; i < list.Count; i++)
+                names[i] = System.IO.Path.GetFileNameWithoutExtension(UnityEditor.AssetDatabase.GetAssetPath(list[i]));
+            entries.Add(new Entry { key = kv.Key, signs = list.ToArray(), spriteNames = names });
         }
         entries.Sort((a, b) => string.CompareOrdinal(a.key, b.key));
 
+        aliases = ReadAliases();
+
         _lookup = null;
         UnityEditor.EditorUtility.SetDirty(this);
-        Debug.Log("[SignWritingLibrary] Rebuilt: " + entries.Count + " entries from " + root);
+        Debug.Log("[SignWritingLibrary] Rebuilt: " + entries.Count + " entries, " + aliases.Count +
+                  " synonyms from " + SignFolder);
+        return entries.Count;
+    }
+
+    // The "sinonimos" object of the dictionary file: { "ataque": "Dano", ... }.
+    // JsonUtility cannot read a map, and this is the only part needed here.
+    private List<Alias> ReadAliases()
+    {
+        var list = new List<Alias>();
+        if (!System.IO.File.Exists(DictionaryPath)) return list;
+
+        string json = System.IO.File.ReadAllText(DictionaryPath);
+        var block = System.Text.RegularExpressions.Regex.Match(json, "\"sinonimos\"\\s*:\\s*\\{([^}]*)\\}");
+        if (!block.Success) return list;
+
+        var pairs = System.Text.RegularExpressions.Regex.Matches(block.Groups[1].Value, "\"([^\"]+)\"\\s*:\\s*\"([^\"]+)\"");
+        foreach (System.Text.RegularExpressions.Match m in pairs)
+            list.Add(new Alias { word = m.Groups[1].Value, key = m.Groups[2].Value });
+        return list;
     }
 #endif
 }

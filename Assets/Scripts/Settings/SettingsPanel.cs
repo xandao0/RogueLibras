@@ -52,7 +52,7 @@ public class SettingsPanel : MonoBehaviour
         new System.Collections.Generic.List<SlotRow>();
 
     private float _resetArmedUntil;
-    private string _resetIdleText = "Apagar tudo";
+
     private float _restartArmedUntil;
 
     [Header("Battle scene")]
@@ -78,7 +78,6 @@ public class SettingsPanel : MonoBehaviour
 
         if (resetButton != null)
         {
-            if (resetLabel != null) _resetIdleText = resetLabel.text;
             resetButton.onClick.AddListener(OnResetPressed);
         }
 
@@ -170,8 +169,9 @@ public class SettingsPanel : MonoBehaviour
 
             if (row.label != null)
                 row.label.text = data != null
-                    ? "Save " + (i + 1) + "\n<size=70%>" + data.Describe() + "</size>"
-                    : "Save " + (i + 1) + "\n<size=70%>vazio</size>";
+                    ? Loc.T("settings.slot", i + 1) + "  <size=70%>" + SignProgression.Describe(data.Direction) + "</size>"
+                      + "\n<size=70%>" + data.Describe(false) + "</size>"
+                    : Loc.T("settings.slot", i + 1) + "\n<size=70%>" + Loc.T("settings.slot_empty") + "</size>";
 
             if (row.save != null)   row.save.interactable = canSave;
             if (row.load != null)   row.load.interactable = data != null;
@@ -209,7 +209,7 @@ public class SettingsPanel : MonoBehaviour
         if (Time.unscaledTime > _resetArmedUntil)
         {
             _resetArmedUntil = Time.unscaledTime + Mathf.Max(0.5f, resetConfirmWindow);
-            if (resetLabel != null) resetLabel.text = "Confirmar?";
+            if (resetLabel != null) resetLabel.text = Loc.Signed("settings.confirm");
             return;
         }
 
@@ -235,7 +235,7 @@ public class SettingsPanel : MonoBehaviour
         if (inBattle && Time.unscaledTime > _restartArmedUntil)
         {
             _restartArmedUntil = Time.unscaledTime + Mathf.Max(0.5f, resetConfirmWindow);
-            if (restartLabel != null) restartLabel.text = "Confirmar?";
+            if (restartLabel != null) restartLabel.text = Loc.Signed("settings.confirm");
             return;
         }
 
@@ -249,14 +249,16 @@ public class SettingsPanel : MonoBehaviour
         _restartArmedUntil = 0f;
         if (restartLabel == null) return;
 
-        string from = SaveSystem.UsedSlotCount() > 0 ? "do último save" : "do início";
-        restartLabel.text = "Recomeçar\n<size=62%>" + from + "</size>";
+        string from = Loc.T(SaveSystem.UsedSlotCount() > 0 ? "settings.restart_from_save" : "settings.restart_from_start");
+        restartLabel.text = Loc.Signed("settings.restart") + "\n<size=62%>" + from + "</size>";
     }
 
     private void DisarmReset()
     {
+        SignText.UsePlainSigns(resetLabel);
+        SignText.UsePlainSigns(restartLabel);
         _resetArmedUntil = 0f;
-        if (resetLabel != null) resetLabel.text = _resetIdleText;
+        if (resetLabel != null) resetLabel.text = Loc.Signed("settings.delete_all");
         if (resetButton != null) resetButton.interactable = SaveSystem.UsedSlotCount() > 0;
     }
 

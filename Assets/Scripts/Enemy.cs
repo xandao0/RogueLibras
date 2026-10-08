@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Enemy : MonoBehaviour
+public class Enemy : MonoBehaviour, ISignWordSource
 {
     public EnemyDataSO eData;
 
@@ -41,6 +41,13 @@ public class Enemy : MonoBehaviour
     public Sprite sprite_IntentBuff;
     public Sprite sprite_IntentDisable;
 
+    [Header("SignWriting")]
+    [Tooltip("Size of the signs that replace the name and numbers, relative to the text.")]
+    [Range(0.6f, 3f)] public float signScale = 1.25f;
+
+    // What the intent badge shows; -1 when it shows no number.
+    private int _intentAmount = -1;
+
     public List<EnemyDataSO.EnemyIntents> thisTurnIntent = new List<EnemyDataSO.EnemyIntents>();
     public int thisTurnIntentStrength;
 
@@ -63,6 +70,8 @@ public class Enemy : MonoBehaviour
     private void Start()
     {
         if (reaction == null) reaction = GetComponent<EnemyReaction>();
+        // Big HUD text: signs without the card outline, which smears them here.
+        foreach (var t in new[] { enemyName, healthText, blockedAmtDisplay, intentAmtText }) SignText.UsePlainSigns(t);
         CollectInfoFromData();
     }
 
@@ -74,13 +83,13 @@ public class Enemy : MonoBehaviour
             return;
         }
 
-        eName = eData.enemyName;
+        eName = Loc.EnemyName(eData);   // in the active language; see Assets/Locales
         eType = eData.enemyType;
         maxHP = eData.maxHP + EnemyManager.instance.defeatedEnemiesCount * 2; // AUMENTO CADA VEZ QUE UM É DERROTADO
         strength = eData.strength;
 
         healthSlider.maxValue = maxHP;
-        enemyName.text = eName;   // Camel case as authored; no shouting
+        enemyName.text = SignText.Staged(eName, eName, signScale);   // Camel case as authored; no shouting
         CurrentHP = restoreHP > 0 ? Mathf.Min(restoreHP, maxHP) : maxHP;
 
         enemyArt.sprite = eData.artwork;
@@ -101,7 +110,7 @@ public class Enemy : MonoBehaviour
         }
 
         healthSlider.value = currentHP;
-        healthText.text = string.Format("{0}/{1}", currentHP, maxHP);
+        healthText.text = HealthText();
 
         if (blockedDemage <= 0)
         {
@@ -126,7 +135,7 @@ public class Enemy : MonoBehaviour
             CurrentHP -= dmg;
         }
 
-        blockedAmtDisplay.text = blockedDemage.ToString();
+        blockedAmtDisplay.text = SignText.Number(blockedDemage, signScale);
         if (reaction != null) reaction.PlayHurt();
         HandleHealth();
     }
@@ -143,11 +152,44 @@ public class Enemy : MonoBehaviour
         if (blockedDemage > 0)
         {
             currentBlockedDisplay.SetActive(true);
-            blockedAmtDisplay.text = blockedDemage.ToString();
+            blockedAmtDisplay.text = SignText.Number(blockedDemage, signScale);
         }
 
         if (reaction != null) reaction.PlayDefend();
         HandleHealth();
+    }
+
+    // ---- SignWriting ----------------------------------------------------------
+    // The name, health, block and intent numbers turn into signs one at a time
+    // along with the words on the cards (see SignProgression).
+
+    private string HealthText()
+    {
+        return SignText.Number(currentHP, signScale) + "/" + SignText.Number(maxHP, signScale);
+    }
+
+    /// The number on the intent badge, or none (-1).
+    public void ShowIntentAmount(int amount)
+    {
+        _intentAmount = amount;
+        if (intentAmtText != null) intentAmtText.text = amount >= 0 ? SignText.Number(amount, signScale) : "";
+    }
+
+    public void CollectSignWords(List<string> into)
+    {
+        SignText.AddWord(into, eName);
+        SignText.NumberWords(currentHP, into);
+        SignText.NumberWords(maxHP, into);
+        if (blockedDemage > 0) SignText.NumberWords(blockedDemage, into);
+        if (_intentAmount >= 0) SignText.NumberWords(_intentAmount, into);
+    }
+
+    public void RefreshSignText()
+    {
+        if (enemyName != null) enemyName.text = SignText.Staged(eName, eName, signScale);
+        if (healthText != null) healthText.text = HealthText();
+        if (blockedAmtDisplay != null) blockedAmtDisplay.text = SignText.Number(blockedDemage, signScale);
+        ShowIntentAmount(_intentAmount);
     }
 
     public void OnNewTurn()

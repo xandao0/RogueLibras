@@ -130,6 +130,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 46997416505096888, guid: b40af83cdfa030049a160961846b2599, type: 3}
+      propertyPath: m_text
+      value: Salvar
+      objectReference: {fileID: 0}
+    - target: {fileID: 575165108227722024, guid: b40af83cdfa030049a160961846b2599, type: 3}
+      propertyPath: m_text
+      value: "M\xFAsica"
+      objectReference: {fileID: 0}
+    - target: {fileID: 805593756261701402, guid: b40af83cdfa030049a160961846b2599, type: 3}
+      propertyPath: m_text
+      value: Efeitos
+      objectReference: {fileID: 0}
+    - target: {fileID: 1168546773280033214, guid: b40af83cdfa030049a160961846b2599, type: 3}
+      propertyPath: m_text
+      value: Jogos salvos
+      objectReference: {fileID: 0}
     - target: {fileID: 1353340408453296545, guid: b40af83cdfa030049a160961846b2599, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -141,6 +157,10 @@ PrefabInstance:
     - target: {fileID: 1353340408453296545, guid: b40af83cdfa030049a160961846b2599, type: 3}
       propertyPath: m_AnchorMin.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2086534732173401014, guid: b40af83cdfa030049a160961846b2599, type: 3}
+      propertyPath: m_text
+      value: Apagar
       objectReference: {fileID: 0}
     - target: {fileID: 2228193474804499813, guid: b40af83cdfa030049a160961846b2599, type: 3}
       propertyPath: m_Pivot.x
@@ -222,6 +242,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3006357795049103009, guid: b40af83cdfa030049a160961846b2599, type: 3}
+      propertyPath: m_text
+      value: Carregar
+      objectReference: {fileID: 0}
     - target: {fileID: 4191466125890676871, guid: b40af83cdfa030049a160961846b2599, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -246,6 +270,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SettingsPanel
       objectReference: {fileID: 0}
+    - target: {fileID: 6191826456500359974, guid: b40af83cdfa030049a160961846b2599, type: 3}
+      propertyPath: m_text
+      value: Fechar
+      objectReference: {fileID: 0}
     - target: {fileID: 7923043438610795641, guid: b40af83cdfa030049a160961846b2599, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -257,6 +285,10 @@ PrefabInstance:
     - target: {fileID: 7923043438610795641, guid: b40af83cdfa030049a160961846b2599, type: 3}
       propertyPath: m_AnchorMin.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8622982493148964735, guid: b40af83cdfa030049a160961846b2599, type: 3}
+      propertyPath: m_text
+      value: "Configura\xE7\xF5es"
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -974,6 +1006,7 @@ GameObject:
   - component: {fileID: 799420576}
   - component: {fileID: 799420578}
   - component: {fileID: 799420577}
+  - component: {fileID: 799420579}
   m_Layer: 0
   m_Name: Text
   m_TagString: Untagged
@@ -1050,9 +1083,9 @@ MonoBehaviour:
   m_fontSize: 39.65
   m_fontSizeBase: 39.65
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 17.8425
+  m_fontSizeMax: 39.65
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -1097,6 +1130,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 799420575}
   m_CullTransparentMesh: 1
+--- !u!114 &799420579
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 799420575}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 865d5f742f8785245ab5ef2a4cf02104, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: menu.options
+  showSigns: 1
+  layout: 0
+  signScale: 1.3
 --- !u!1 &860594528
 GameObject:
   m_ObjectHideFlags: 0
@@ -11121,6 +11170,7 @@ GameObject:
   - component: {fileID: 1423427202}
   - component: {fileID: 1423427204}
   - component: {fileID: 1423427203}
+  - component: {fileID: 1423427205}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -11244,6 +11294,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1423427201}
   m_CullTransparentMesh: 1
+--- !u!114 &1423427205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1423427201}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 865d5f742f8785245ab5ef2a4cf02104, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: menu.quit
+  showSigns: 1
+  layout: 0
+  signScale: 1.3
 --- !u!1 &1451297749
 GameObject:
   m_ObjectHideFlags: 0
@@ -11713,6 +11779,7 @@ GameObject:
   - component: {fileID: 1980120158}
   - component: {fileID: 1980120160}
   - component: {fileID: 1980120159}
+  - component: {fileID: 1980120161}
   m_Layer: 5
   m_Name: Text (TMP) (1)
   m_TagString: Untagged
@@ -11836,6 +11903,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1980120157}
   m_CullTransparentMesh: 1
+--- !u!114 &1980120161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1980120157}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 865d5f742f8785245ab5ef2a4cf02104, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: menu.play
+  showSigns: 1
+  layout: 0
+  signScale: 1.3
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

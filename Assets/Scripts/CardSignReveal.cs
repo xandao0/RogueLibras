@@ -103,7 +103,7 @@ public class CardSignReveal : MonoBehaviour
         _run = null;
     }
 
-    // The new sign pops, glows and sparkles wherever it now appears on the card.
+    // The changed word pops, glows and sparkles wherever it now appears on the card.
     private IEnumerator Burst()
     {
         yield return null;   // let the rows lay out the new sign before measuring it
@@ -117,7 +117,9 @@ public class CardSignReveal : MonoBehaviour
         for (int i = 0; i < _spots.Count; i++)
         {
             var s = _spots[i];
-            if (!s.isSign || SignWritingLibrary.Normalize(s.key) != key) continue;
+            // Sign or text: in a Libras-to-Portuguese run the word has just
+            // turned back into writing, and that is what should sparkle.
+            if (SignWritingLibrary.Normalize(s.key) != key) continue;
 
             Vector2 a = _body.InverseTransformPoint(s.bottomLeft);
             Vector2 b = _body.InverseTransformPoint(s.topRight);

@@ -1181,9 +1181,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pile: 0
-  word: Compra
-  countFormat: '{0} cartas para comprar'
-  singularFormat: 1 carta para comprar
   signLibrary: {fileID: 11400000, guid: 93a805dfad8eb924895809811a70023f, type: 2}
   font: {fileID: 11400000, guid: fe52d295d4b74ea4e82c91bf2aa71b89, type: 2}
   fontMaterial: {fileID: 2100000, guid: 1aee63a7ec3639d418a64eaa96bac8ae, type: 2}
@@ -7409,6 +7406,7 @@ GameObject:
   - component: {fileID: 814911614}
   - component: {fileID: 814911616}
   - component: {fileID: 814911615}
+  - component: {fileID: 814911617}
   m_Layer: 0
   m_Name: Text
   m_TagString: Untagged
@@ -7485,9 +7483,9 @@ MonoBehaviour:
   m_fontSize: 26
   m_fontSizeBase: 26
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 11.7
+  m_fontSizeMax: 26
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -7532,6 +7530,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 814911613}
   m_CullTransparentMesh: 1
+--- !u!114 &814911617
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 814911613}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 865d5f742f8785245ab5ef2a4cf02104, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: battle.exit
+  showSigns: 1
+  layout: 1
+  signScale: 1.1
 --- !u!1 &825959988
 GameObject:
   m_ObjectHideFlags: 0
@@ -7543,6 +7557,7 @@ GameObject:
   - component: {fileID: 825959989}
   - component: {fileID: 825959991}
   - component: {fileID: 825959990}
+  - component: {fileID: 825959992}
   m_Layer: 0
   m_Name: Text
   m_TagString: Untagged
@@ -7619,9 +7634,9 @@ MonoBehaviour:
   m_fontSize: 26
   m_fontSizeBase: 26
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 11.7
+  m_fontSizeMax: 26
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -7666,6 +7681,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 825959988}
   m_CullTransparentMesh: 1
+--- !u!114 &825959992
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 825959988}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 865d5f742f8785245ab5ef2a4cf02104, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: battle.options
+  showSigns: 1
+  layout: 1
+  signScale: 1.1
 --- !u!1001 &826572882
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7674,6 +7705,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 46997416505096888, guid: b40af83cdfa030049a160961846b2599, type: 3}
+      propertyPath: m_text
+      value: Salvar
+      objectReference: {fileID: 0}
+    - target: {fileID: 575165108227722024, guid: b40af83cdfa030049a160961846b2599, type: 3}
+      propertyPath: m_text
+      value: "M\xFAsica"
+      objectReference: {fileID: 0}
+    - target: {fileID: 805593756261701402, guid: b40af83cdfa030049a160961846b2599, type: 3}
+      propertyPath: m_text
+      value: Efeitos
+      objectReference: {fileID: 0}
+    - target: {fileID: 1168546773280033214, guid: b40af83cdfa030049a160961846b2599, type: 3}
+      propertyPath: m_text
+      value: Jogos salvos
+      objectReference: {fileID: 0}
     - target: {fileID: 1353340408453296545, guid: b40af83cdfa030049a160961846b2599, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -7685,6 +7732,10 @@ PrefabInstance:
     - target: {fileID: 1353340408453296545, guid: b40af83cdfa030049a160961846b2599, type: 3}
       propertyPath: m_AnchorMin.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2086534732173401014, guid: b40af83cdfa030049a160961846b2599, type: 3}
+      propertyPath: m_text
+      value: Apagar
       objectReference: {fileID: 0}
     - target: {fileID: 2228193474804499813, guid: b40af83cdfa030049a160961846b2599, type: 3}
       propertyPath: m_Pivot.x
@@ -7766,6 +7817,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3006357795049103009, guid: b40af83cdfa030049a160961846b2599, type: 3}
+      propertyPath: m_text
+      value: Carregar
+      objectReference: {fileID: 0}
     - target: {fileID: 4191466125890676871, guid: b40af83cdfa030049a160961846b2599, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -7790,6 +7845,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SettingsPanel
       objectReference: {fileID: 0}
+    - target: {fileID: 6191826456500359974, guid: b40af83cdfa030049a160961846b2599, type: 3}
+      propertyPath: m_text
+      value: Fechar
+      objectReference: {fileID: 0}
     - target: {fileID: 7923043438610795641, guid: b40af83cdfa030049a160961846b2599, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -7801,6 +7860,10 @@ PrefabInstance:
     - target: {fileID: 7923043438610795641, guid: b40af83cdfa030049a160961846b2599, type: 3}
       propertyPath: m_AnchorMin.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8622982493148964735, guid: b40af83cdfa030049a160961846b2599, type: 3}
+      propertyPath: m_text
+      value: "Configura\xE7\xF5es"
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -7829,6 +7892,7 @@ GameObject:
   - component: {fileID: 877986914}
   - component: {fileID: 877986916}
   - component: {fileID: 877986915}
+  - component: {fileID: 877986917}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -7952,6 +8016,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 877986913}
   m_CullTransparentMesh: 1
+--- !u!114 &877986917
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 877986913}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 865d5f742f8785245ab5ef2a4cf02104, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: end.restart
+  showSigns: 1
+  layout: 0
+  signScale: 1.3
 --- !u!1 &990087470
 GameObject:
   m_ObjectHideFlags: 0
@@ -8925,9 +9005,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pile: 1
-  word: Descarte
-  countFormat: '{0} cartas descartadas'
-  singularFormat: 1 carta descartada
   signLibrary: {fileID: 11400000, guid: 93a805dfad8eb924895809811a70023f, type: 2}
   font: {fileID: 11400000, guid: fe52d295d4b74ea4e82c91bf2aa71b89, type: 2}
   fontMaterial: {fileID: 2100000, guid: 1aee63a7ec3639d418a64eaa96bac8ae, type: 2}
@@ -8971,7 +9048,7 @@ MonoBehaviour:
   slider: {fileID: 114519609}
   amountText: {fileID: 2103806178}
   softMax: 20
-  signAfterTurn: 5
+  signScale: 1.5
   emptyAlpha: 0.35
   lerpSpeed: 10
 --- !u!224 &1326375129
@@ -9446,6 +9523,7 @@ GameObject:
   - component: {fileID: 1453880054}
   - component: {fileID: 1453880056}
   - component: {fileID: 1453880055}
+  - component: {fileID: 1453880057}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -9569,6 +9647,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1453880053}
   m_CullTransparentMesh: 1
+--- !u!114 &1453880057
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1453880053}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 865d5f742f8785245ab5ef2a4cf02104, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: end.quit
+  showSigns: 1
+  layout: 0
+  signScale: 1.3
 --- !u!1 &1474896978
 GameObject:
   m_ObjectHideFlags: 0
@@ -9731,6 +9825,7 @@ GameObject:
   - component: {fileID: 1496509363}
   - component: {fileID: 1496509365}
   - component: {fileID: 1496509364}
+  - component: {fileID: 1496509366}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -9854,6 +9949,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1496509362}
   m_CullTransparentMesh: 1
+--- !u!114 &1496509366
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1496509362}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 865d5f742f8785245ab5ef2a4cf02104, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: end.game_over
+  showSigns: 0
+  layout: 0
+  signScale: 1.3
 --- !u!1 &1539636958
 GameObject:
   m_ObjectHideFlags: 0
@@ -9898,6 +10009,7 @@ GameObject:
   - component: {fileID: 1566808573}
   - component: {fileID: 1566808575}
   - component: {fileID: 1566808574}
+  - component: {fileID: 1566808576}
   m_Layer: 5
   m_Name: HP
   m_TagString: Untagged
@@ -9944,7 +10056,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Vida:'
+  m_text: '<size=130%><sprite name="Vida" tint=1></size>  Vida:'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fe52d295d4b74ea4e82c91bf2aa71b89, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 1aee63a7ec3639d418a64eaa96bac8ae, type: 2}
@@ -9974,9 +10086,9 @@ MonoBehaviour:
   m_fontSize: 40
   m_fontSizeBase: 40
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_fontSizeMax: 40
   m_fontStyle: 0
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
@@ -10021,6 +10133,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1566808572}
   m_CullTransparentMesh: 1
+--- !u!114 &1566808576
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1566808572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 865d5f742f8785245ab5ef2a4cf02104, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: battle.life
+  showSigns: 1
+  layout: 0
+  signScale: 1.3
 --- !u!1 &1581984801
 GameObject:
   m_ObjectHideFlags: 0
@@ -20737,6 +20865,7 @@ GameObject:
   - component: {fileID: 1926692040}
   - component: {fileID: 1926692042}
   - component: {fileID: 1926692041}
+  - component: {fileID: 1926692043}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -20813,9 +20942,9 @@ MonoBehaviour:
   m_fontSize: 22
   m_fontSizeBase: 22
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 10
+  m_fontSizeMax: 22
   m_fontStyle: 1
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
@@ -20860,6 +20989,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1926692039}
   m_CullTransparentMesh: 1
+--- !u!114 &1926692043
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1926692039}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 865d5f742f8785245ab5ef2a4cf02104, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: battle.end_turn
+  showSigns: 1
+  layout: 0
+  signScale: 1.3
 --- !u!1 &1963360869
 GameObject:
   m_ObjectHideFlags: 0
@@ -21130,6 +21275,7 @@ MonoBehaviour:
   cardBurnMaterial: {fileID: 2100000, guid: 9fe6cd89cec3ad740937aa9037381fce, type: 2}
   signRevealDelay: 0.55
   signRevealStagger: 0.12
+  pileSignScale: 1.3
 --- !u!4 &2052985846
 Transform:
   m_ObjectHideFlags: 0
@@ -21306,6 +21452,7 @@ GameObject:
   - component: {fileID: 2115954359}
   - component: {fileID: 2115954361}
   - component: {fileID: 2115954360}
+  - component: {fileID: 2115954362}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -21429,6 +21576,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2115954358}
   m_CullTransparentMesh: 1
+--- !u!114 &2115954362
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2115954358}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 865d5f742f8785245ab5ef2a4cf02104, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: end.choose_card
+  showSigns: 0
+  layout: 0
+  signScale: 1.3
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

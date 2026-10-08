@@ -1,0 +1,33 @@
+{
+  "_meta": {
+    "id": "libras",
+    "name": "Libras",
+    "kind": "sign",
+    "script": "SignWriting",
+    "glossLanguage": "pt-BR",
+    "notes": "Each value is the sign(s) for that text, written as entries of dictionary.json separated by spaces (Encerrar_Turno is one entry with two signs). A text listed here is shown with its signs next to the words; a text left out stays written only - that is every button and menu for now. To sign one, add its key here, e.g. \"menu\": { \"play\": \"Jogar\" }, and put the sign in dictionary.json. Card names and descriptions are not listed: they are glossed word by word from the pt-BR text, as the sign progression changes them."
+  },
+  "battle": {
+    "life": "Vida",
+    "draw_pile": "Compra",
+    "discard_pile": "Descarte"
+  },
+  "categories": {
+    "common": "Carta_Comum",
+    "combination": "Combinacao"
+  },
+  "language": {
+    "portuguese": "Portugues",
+    "libras": "Libras"
+  },
+  "direction": {
+    "pt_to_libras": "Portugues Libras",
+    "libras_to_pt": "Libras Portugues"
+  },
+  "start": {
+    "back": "Voltar"
+  },
+  "help": {
+    "button": "Ajudar"
+  }
+}

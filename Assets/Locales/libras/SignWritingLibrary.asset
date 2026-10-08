@@ -16,101 +16,227 @@ MonoBehaviour:
   - key: agua
     signs:
     - {fileID: 3286163911610860551, guid: 5c7e619739e637f49b0e9a9a5653a2d4, type: 3}
+    spriteNames:
+    - Agua
+  - key: ajudar
+    signs:
+    - {fileID: 3286163911610860551, guid: b51c04d57ec39d6409e31dbe5cc4aba8, type: 3}
+    spriteNames:
+    - Ajudar
   - key: bloqueio
     signs:
     - {fileID: 3286163911610860551, guid: 0242e75e7ea7a7340aec3f2cf49384e5, type: 3}
+    spriteNames:
+    - Bloqueio
+  - key: carta
+    signs:
+    - {fileID: 3286163911610860551, guid: d46b1f19e982f5640943a07b00968926, type: 3}
+    spriteNames:
+    - Carta
   - key: carta_comum
     signs:
     - {fileID: 3286163911610860551, guid: b7a97df275a781543856a2ef8b261816, type: 3}
     - {fileID: 3286163911610860551, guid: 7770fb12120c38f48a1e14c973176695, type: 3}
+    spriteNames:
+    - Carta_Comum_1
+    - Carta_Comum_2
+  - key: cartas
+    signs:
+    - {fileID: 3286163911610860551, guid: 52a8da4eca1daed4bb8ff8d5739a3667, type: 3}
+    spriteNames:
+    - Cartas
+  - key: causa
+    signs:
+    - {fileID: 3286163911610860551, guid: 108b9f745f343bd4281767ac2c48f41a, type: 3}
+    spriteNames:
+    - Causa
   - key: combinacao
     signs:
     - {fileID: 3286163911610860551, guid: c55a07ae5297f9245bbcc535a9ce9e1d, type: 3}
+    spriteNames:
+    - Combinacao
   - key: compra
     signs:
     - {fileID: 3286163911610860551, guid: f3098b272f239f544b8b9eefb90350b2, type: 3}
+    spriteNames:
+    - Compra
   - key: curar
     signs:
     - {fileID: 3286163911610860551, guid: 1521c75bfa2e75145abd887b0d232f23, type: 3}
+    spriteNames:
+    - Curar
   - key: dano
     signs:
     - {fileID: 3286163911610860551, guid: 975c92f80fad4fa4582309ee6e2aeb37, type: 3}
+    spriteNames:
+    - Dano
   - key: defesa
     signs:
     - {fileID: 3286163911610860551, guid: d967f1bd8a7012d4f8cf25c5489dc0f6, type: 3}
+    spriteNames:
+    - Defesa
   - key: descarte
     signs:
     - {fileID: 3286163911610860551, guid: 3e117904370bfae4ea4c0987c970bcb8, type: 3}
+    spriteNames:
+    - Descarte
   - key: encerrar_turno
     signs:
     - {fileID: 3286163911610860551, guid: 2fb2175d8daefcb4ab8908528869e07b, type: 3}
     - {fileID: 3286163911610860551, guid: 9aed876d6f7113044b74681bedbd74b5, type: 3}
+    spriteNames:
+    - Encerrar_Turno_1
+    - Encerrar_Turno_2
   - key: energia
     signs:
     - {fileID: 3286163911610860551, guid: 5981b8ec4fda23c48b38bc67dc0c94fd, type: 3}
+    spriteNames:
+    - Energia
   - key: escudo
     signs:
     - {fileID: 3286163911610860551, guid: 8dc23ec1e65f9204cb5d460b4b760893, type: 3}
+    spriteNames:
+    - Escudo
   - key: espelho
     signs:
     - {fileID: 3286163911610860551, guid: c2cbfb8438eba7a49b6ca2d85d79fb02, type: 3}
+    spriteNames:
+    - Espelho
   - key: faca
     signs:
     - {fileID: 3286163911610860551, guid: 3ed5713d209c1f24494f161b5f967a7e, type: 3}
+    spriteNames:
+    - Faca
   - key: ferro
     signs:
     - {fileID: 3286163911610860551, guid: 588a6cd2c8583394ca9b31710f59d0d2, type: 3}
+    spriteNames:
+    - Ferro
   - key: fogo
     signs:
     - {fileID: 3286163911610860551, guid: 3d72d7ee08c238f44b0529e73ff485cf, type: 3}
+    spriteNames:
+    - Fogo
   - key: furacao
     signs:
     - {fileID: 3286163911610860551, guid: 6647e4298dddf6c4e9fe2fac0d9ebed9, type: 3}
+    spriteNames:
+    - Furacao
   - key: gelo
     signs:
     - {fileID: 3286163911610860551, guid: 59d66a2d4b30e9a40b039d2c2a8c75aa, type: 3}
+    spriteNames:
+    - Gelo
+  - key: libras
+    signs:
+    - {fileID: 3286163911610860551, guid: ed38bbe1146d6b740b5aa21c9aec0175, type: 3}
+    spriteNames:
+    - Libras
   - key: maca
     signs:
     - {fileID: 3286163911610860551, guid: db0cf85ba8660f44ab175f4e12871dbd, type: 3}
+    spriteNames:
+    - Maca
+  - key: numero_0
+    signs:
+    - {fileID: 3286163911610860551, guid: 331559eaea403a9408da8763205d87d4, type: 3}
+    spriteNames:
+    - Numero_0
   - key: numero_1
     signs:
     - {fileID: 3286163911610860551, guid: 2deb48b7023769d43a8e7fa35167c626, type: 3}
+    spriteNames:
+    - Numero_1
   - key: numero_10
     signs:
     - {fileID: 3286163911610860551, guid: 930987422e2e7ea448360725038a25df, type: 3}
+    spriteNames:
+    - Numero_10
   - key: numero_2
     signs:
     - {fileID: 3286163911610860551, guid: 60de9d7df2e3ebe488f2c936da66b8c1, type: 3}
+    spriteNames:
+    - Numero_2
   - key: numero_3
     signs:
     - {fileID: 3286163911610860551, guid: 0c43e9f5bfefedd418ffed6910944608, type: 3}
+    spriteNames:
+    - Numero_3
   - key: numero_4
     signs:
     - {fileID: 3286163911610860551, guid: d5597c8075dc5194ab43107437f8331c, type: 3}
+    spriteNames:
+    - Numero_4
   - key: numero_5
     signs:
     - {fileID: 3286163911610860551, guid: 286e257f503e3cb458cf7dae966432b0, type: 3}
+    spriteNames:
+    - Numero_5
   - key: numero_6
     signs:
     - {fileID: 3286163911610860551, guid: fff04167dcb87834bab9a9957314cf37, type: 3}
+    spriteNames:
+    - Numero_6
   - key: numero_7
     signs:
     - {fileID: 3286163911610860551, guid: 8274bd9c8261b5247a23ed5977230be5, type: 3}
+    spriteNames:
+    - Numero_7
   - key: numero_8
     signs:
     - {fileID: 3286163911610860551, guid: d8665ec8a9b339743abad1e9466f655e, type: 3}
+    spriteNames:
+    - Numero_8
   - key: numero_9
     signs:
     - {fileID: 3286163911610860551, guid: c0513d528cc2ac3499d9501d2109a8ff, type: 3}
+    spriteNames:
+    - Numero_9
+  - key: pao
+    signs:
+    - {fileID: 3286163911610860551, guid: f48f6bbc2628cc04a933e8c8674951b1, type: 3}
+    spriteNames:
+    - Pao
+  - key: portugues
+    signs:
+    - {fileID: 3286163911610860551, guid: f2e694db464a5f44ca793a2e83950863, type: 3}
+    spriteNames:
+    - Portugues
   - key: raio
     signs:
     - {fileID: 3286163911610860551, guid: fe9687841b2ae8f48b8a01d26430b373, type: 3}
+    spriteNames:
+    - Raio
   - key: tempestade
     signs:
     - {fileID: 3286163911610860551, guid: 93b79b53b130dc94b892aa49a8126698, type: 3}
+    spriteNames:
+    - Tempestade
   - key: veneno
     signs:
     - {fileID: 3286163911610860551, guid: 4b21f7502eba1f2409979168ee4597c2, type: 3}
+    spriteNames:
+    - Veneno
   - key: vida
     signs:
     - {fileID: 3286163911610860551, guid: dd59577238276e04a931eca46012b05d, type: 3}
+    spriteNames:
+    - Vida
+  - key: voltar
+    signs:
+    - {fileID: 3286163911610860551, guid: 253f2de6aabb1d4419ab808f14cf4b8c, type: 3}
+    spriteNames:
+    - Voltar
+  aliases:
+  - word: ataque
+    key: Dano
+  - word: ataca
+    key: Dano
+  - word: cura
+    key: Curar
+  - word: curam
+    key: Curar
+  - word: defende
+    key: Defesa
+  - word: defender
+    key: Defesa

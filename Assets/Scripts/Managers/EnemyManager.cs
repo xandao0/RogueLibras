@@ -107,12 +107,12 @@ public class EnemyManager : MonoBehaviour
             case EnemyIntentsType.ATTACK:
                int dmg = enemy.thisTurnIntentStrength;
                enemy.intentImage.sprite = enemy.sprite_IntentAttack;
-               enemy.intentAmtText.text = dmg.ToString(); // Mostra o valor do ataque
+               enemy.ShowIntentAmount(dmg); // Mostra o valor do ataque (número ou sinal)
                break;
 
             case EnemyIntentsType.DEFEND:
                enemy.intentImage.sprite = enemy.sprite_IntentDefense;
-               enemy.intentAmtText.text = ""; 
+               enemy.ShowIntentAmount(-1);
                break;
          }
       }

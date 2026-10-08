@@ -10,22 +10,20 @@ using UnityEngine.UI;
 // The pile's name goes through the same text -> sign staging as the cards:
 // while SignProgression still has the word as text it is written out, and once
 // it has graduated its SignWriting is shown instead, on a light tile because the
-// signs are dark line art. Nothing teaches "compra" or "descarte" yet - add them
-// to the words CardManager.AdvanceSignProgression offers when they should start
-// graduating, and the tooltip follows on its own.
+// signs are dark line art. The texts are battle.draw_pile / battle.discard_pile
+// (and their _count lines) in Assets/Locales; the sign is that key's gloss.
 [DisallowMultipleComponent]
 public class PileTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public enum Pile { Draw, Discard }
 
     [SerializeField] private Pile pile;
-    [Tooltip("The pile's name - also the SignWriting word that replaces it.")]
-    [SerializeField] private string word = "Compra";
-    [Tooltip("Second line. {0} is the number of cards in the pile.")]
-    [SerializeField] private string countFormat = "{0} cartas para comprar";
-    [Tooltip("Second line when the pile holds exactly one card.")]
-    [SerializeField] private string singularFormat = "1 carta para comprar";
+    [Tooltip("Fallback when there are no locale settings; normally the active " +
+             "sign language's library is used.")]
     [SerializeField] private SignWritingLibrary signLibrary;
+
+    private string Key { get { return pile == Pile.Draw ? "battle.draw_pile" : "battle.discard_pile"; } }
+    private string CountKey { get { return pile == Pile.Draw ? "battle.draw_count" : "battle.discard_count"; } }
 
     [Header("Text")]
     [SerializeField] private TMP_FontAsset font;
@@ -97,18 +95,19 @@ public class PileTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     private void Refresh()
     {
-        Sprite[] signs = signLibrary != null ? signLibrary.Get(word) : null;
+        string title = Loc.T(Key);
+        string word = Loc.Gloss(Key) ?? title;   // the dictionary entry it is signed with
+        SignWritingLibrary library = Loc.Signs != null ? Loc.Signs : signLibrary;
+        Sprite[] signs = library != null ? library.Get(word) : null;
         bool asSign = signs != null && signs.Length > 0 && SignProgression.GetStage(word) == SignProgression.Stage.Sign;
 
         _title.gameObject.SetActive(!asSign);
         _signTile.gameObject.SetActive(asSign);
         if (asSign) FillSigns(signs);
-        else _title.text = word;
+        else _title.text = title;
 
         int count = CardCount();
-        _count.text = count == 1 && !string.IsNullOrEmpty(singularFormat)
-            ? singularFormat
-            : string.Format(countFormat, count);
+        _count.text = count == 1 ? Loc.T(CountKey + "_one") : Loc.T(CountKey, count);
         LayoutRebuilder.ForceRebuildLayoutImmediate(_tip);
     }
 
@@ -192,7 +191,7 @@ public class PileTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         fit.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
         fit.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
 
-        _title = NewText("Title", _tip, word, 26f, textColor);
+        _title = NewText("Title", _tip, Loc.T(Key), 26f, textColor);
         _title.fontStyle = FontStyles.Bold;
         _title.gameObject.AddComponent<LayoutElement>().minWidth = 160f;
 

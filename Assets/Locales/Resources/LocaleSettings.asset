@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a446af254049cae4a802ab68bd513cca, type: 3}
+  m_Name: LocaleSettings
+  m_EditorClassIdentifier: 
+  textLocales:
+  - id: pt-BR
+    displayName: "Portugu\xEAs (Brasil)"
+    strings: {fileID: 4900000, guid: 8427c6de705f0dc48b47a4a676bc1671, type: 3}
+  signLocales:
+  - id: libras
+    displayName: Libras
+    glossLanguage: pt-BR
+    glosses: {fileID: 4900000, guid: 4f89e2e26856f4542b5eef9f81d107c2, type: 3}
+    library: {fileID: 11400000, guid: 93a805dfad8eb924895809811a70023f, type: 2}
+  referenceText: pt-BR
+  defaultText: pt-BR
+  defaultSign: libras

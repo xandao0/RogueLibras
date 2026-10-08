@@ -477,8 +477,10 @@ public class CardHelp : MonoBehaviour
 
     private Sprite[] SignsFor(string key)
     {
-        if (_card == null || _card.signLibrary == null || string.IsNullOrEmpty(key)) return null;
-        Sprite[] signs = _card.signLibrary.Get(key);
+        SignWritingLibrary library = Loc.Signs;
+        if (library == null && _card != null) library = _card.signLibrary;
+        if (library == null || string.IsNullOrEmpty(key)) return null;
+        Sprite[] signs = library.Get(key);
         return signs != null && signs.Length > 0 ? signs : null;
     }
 
@@ -494,7 +496,7 @@ public class CardHelp : MonoBehaviour
         bool hasTranslation = _pickIsSign || signs != null;
 
         // Large enough to read: the sign itself, or the written word.
-        _wordHeading.text = _pickIsSign ? "SINAL EM LIBRAS" : "EM PORTUGUÊS";
+        _wordHeading.text = Loc.T(_pickIsSign ? "help.heading_sign" : "help.heading_text");
         _wordBigText.gameObject.SetActive(!_pickIsSign);
         _wordBigSigns.gameObject.SetActive(_pickIsSign);
         if (_pickIsSign) FillSigns(_wordBigSigns, _bigSignPool, signs, bigSignHeight);
@@ -502,7 +504,7 @@ public class CardHelp : MonoBehaviour
         _wordRole.text = spot.role;
 
         // The other language, hidden until asked for.
-        _transHeading.text = _pickIsSign ? "EM PORTUGUÊS" : "EM LIBRAS (SIGNWRITING)";
+        _transHeading.text = Loc.T(_pickIsSign ? "help.heading_text" : "help.heading_signwriting");
         _transText.gameObject.SetActive(_pickIsSign);
         _transSigns.gameObject.SetActive(!_pickIsSign);
         if (_pickIsSign) _transText.text = spot.portuguese;
@@ -518,8 +520,8 @@ public class CardHelp : MonoBehaviour
 
     private string TranslateLabel()
     {
-        if (_translated) return "Esconder";
-        return _pickIsSign ? "Traduzir" : "Ver em Libras";
+        if (_translated) return Loc.Text("help.hide");
+        return Loc.Text(_pickIsSign ? "help.translate" : "help.show_sign");
     }
 
     private void OnTranslatePressed()
@@ -726,7 +728,8 @@ public class CardHelp : MonoBehaviour
         q.fontStyle = FontStyles.Bold;
         Stretch(q.rectTransform);
 
-        var label = NewText("Label", _button, "Ajuda", 26f, textColor, TextAlignmentOptions.Center);
+        var label = NewText("Label", _button, Loc.Signed("help.button", SignText.Layout.Inline, 1.2f), 26f, textColor, TextAlignmentOptions.Center);
+        SignText.UsePlainSigns(label);
         var lrt = label.rectTransform;
         lrt.anchorMin = new Vector2(0f, 0f);
         lrt.anchorMax = new Vector2(1f, 1f);
@@ -758,9 +761,9 @@ public class CardHelp : MonoBehaviour
         var fit = _prompt.gameObject.AddComponent<ContentSizeFitter>();
         fit.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
 
-        var main = NewText("Ask", _prompt, "Selecione uma palavra ou sinal da carta", 22f, textColor, TextAlignmentOptions.Center);
+        var main = NewText("Ask", _prompt, Loc.Text("help.prompt"), 22f, textColor, TextAlignmentOptions.Center);
         main.enableWordWrapping = true;
-        var hint = NewText("Hint", _prompt, "Clique fora da carta para sair", 18f, promptHintColor, TextAlignmentOptions.Center);
+        var hint = NewText("Hint", _prompt, Loc.Text("help.exit_hint"), 18f, promptHintColor, TextAlignmentOptions.Center);
         hint.enableWordWrapping = true;
 
         _prompt.gameObject.SetActive(false);
@@ -816,7 +819,7 @@ public class CardHelp : MonoBehaviour
         _transSigns = SignRowRect("Signs", _trans);
         _trans.gameObject.SetActive(false);
 
-        _noSign = PanelText("NoSign", _word, "Esta palavra ainda não tem sinal no jogo.", 18f, inkMutedColor);
+        _noSign = PanelText("NoSign", _word, Loc.Text("help.no_sign"), 18f, inkMutedColor);
         _noSign.enableWordWrapping = true;
 
         var buttons = NewRect("Buttons", _word);
@@ -825,8 +828,8 @@ public class CardHelp : MonoBehaviour
         bl.childAlignment = TextAnchor.MiddleCenter;
         bl.childControlWidth = bl.childControlHeight = true;
         bl.childForceExpandWidth = bl.childForceExpandHeight = false;
-        _translateButton = ActionButton("Translate", buttons, "Ver em Libras", OnTranslatePressed);
-        ActionButton("Close", buttons, "Fechar", CloseWordCard);
+        _translateButton = ActionButton("Translate", buttons, Loc.Text("help.show_sign"), OnTranslatePressed);
+        ActionButton("Close", buttons, Loc.Signed("help.close"), CloseWordCard);
 
         _word.gameObject.SetActive(false);
     }
@@ -941,6 +944,7 @@ public class CardHelp : MonoBehaviour
                              TextAlignmentOptions align)
     {
         var t = NewRect(objectName, parent).gameObject.AddComponent<TextMeshProUGUI>();
+        SignText.UsePlainSigns(t);   // panel text in Libras mode: thin signs
         if (font != null) t.font = font;
         if (fontMaterial != null) t.fontSharedMaterial = fontMaterial;
         t.text = text;
